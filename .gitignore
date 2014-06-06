@@ -6,7 +6,8 @@
 *.out
 *.pid
 *.gz
-.idea/*
+.idea
+*.iml
 *.DS_Store
 lib-cov
 pids
