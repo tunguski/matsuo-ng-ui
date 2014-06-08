@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Displaying validation errors in forms.
  * Wyświetlanie błędów walidacji na ekranach.
@@ -23,8 +25,8 @@ angular.module('mt.ui')
         return function(errorResponse) {
           errorResponse = errorResponse || { data: {} };
 
-          formName = formName || "form";
-          entityName = entityName || "entity";
+          formName = formName || 'form';
+          entityName = entityName || 'entity';
           var entity = $scope[entityName];
 
           var json = errorResponse.data || errorResponse;
@@ -38,8 +40,8 @@ angular.module('mt.ui')
           // process field errors
           if (json.fieldErrors) {
             $.each(json.fieldErrors, function(key, value) {
-              var validationField = _.getOrCreate($scope, formName + "." + (entityName + "." + key).replace(/\./g, '_'));
-              validationField.serverError = $scope.translate("validation.error." + value);
+              var validationField = _.getOrCreate($scope, formName + '.' + (entityName + '.' + key).replace(/\./g, '_'));
+              validationField.serverError = $scope.translate('validation.error.' + value);
             });
           }
 
@@ -48,10 +50,10 @@ angular.module('mt.ui')
             var msg = '<ul>';
 
             angular.forEach(json.globalErrors, function (error) {
-              msg = msg + "<li><b>" + $scope.translate("validation.error." + error) + "</b></li>";
+              msg = msg + '<li><b>' + $scope.translate('validation.error.' + error) + '</b></li>';
             });
 
-            msg = msg + "</ul>";
+            msg = msg + '</ul>';
 
             $dialog.messageBox('Błąd', msg, [{result:'OK', label: 'Zamknij', cssClass: 'btn-primary'}]);
           }

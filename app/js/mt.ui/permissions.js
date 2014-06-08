@@ -1,3 +1,4 @@
+'use strict';
 
 /**
  * Permissions service for UI. It shows/hides parts of view. It does not force security, only visibility. Data

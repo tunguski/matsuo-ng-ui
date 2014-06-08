@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('mt.ui')
     .directive('simpleSearch', function factory() {
       return {
@@ -17,7 +19,7 @@ angular.module('mt.ui')
                   '</form>',
         link: function (scope, iElement, iAttrs) {
           scope.clearQuery = function() {
-            scope.query = "";
+            scope.query = '';
           }
 
           scope.showSearchButton = iAttrs.search;

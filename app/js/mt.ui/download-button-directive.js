@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('mt.ui')
     .directive('downloadButton', function factory() {
       return {
@@ -26,7 +28,7 @@ angular.module('mt.ui')
           function generateLink(type) { return function () {
             if (scope.model) {
               return scope.fileName ? '/api/reports/' + type + '/' + scope.fileName + '?' + _.toUrlParams(scope.model)
-                  : "/api/prints/" + scope.model.id;
+                  : '/api/prints/' + scope.model.id;
             } else {
               return '';
             }

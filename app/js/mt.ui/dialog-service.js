@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('mt.ui')
     .factory('$dialog', ['$rootScope', '$modal', '$http', function($rootScope, $modal, $http) {
 
@@ -29,11 +31,12 @@ angular.module('mt.ui')
          */
         messageBox: function(title, message, buttons, resultFn) {
           var scope = angular.extend($rootScope.$new(false), { title: title, message: message, buttons: buttons });
-          return dialog(modalOptions("template/messageBox/message.html", 'MessageBoxController', scope), function (result) {
-            var value = resultFn ? resultFn(result) : undefined;
-            scope.$destroy();
-            return value;
-          });
+          return dialog(modalOptions('template/messageBox/message.html', 'MessageBoxController', scope),
+              function (result) {
+                var value = resultFn ? resultFn(result) : undefined;
+                scope.$destroy();
+                return value;
+              });
         },
 
         /**
@@ -60,14 +63,14 @@ angular.module('mt.ui')
           opts = opts || {};
           return function (fnType) {
             return function(entity) {
-              var title = 'Potwierdź zmianę statusu';
-              var msg = 'Status zostanie zmieniony na <b translate="{{ entityPartUrl + ".changeStatus." + fnType }}"></b>';
+              var title = 'dialog.statusChange.confirm';
+              var msg = '<span><span translate="dialog.statusChange.successText"></span><b translate="{{ entityPartUrl + \'.changeStatus.\' + fnType }}"></b></span>';
               var btns = [{result:'CANCEL', label: 'Cancel'}, {result:'OK', label: 'OK', cssClass: 'btn-primary'}];
 
-              dialogProvider.messageBox(title, msg, btns, function(result) {
+              return dialogProvider.messageBox(title, msg, btns, function(result) {
                 if (result === 'OK') {
-                  $http.post("/api/" + entityPartUrl + "/" + entity.id + "/" + fnType).success(function(data) {
-                    entity[opts.statusField || 'status'] = data.replace(/"/g, '');
+                  $http.post('/api/' + entityPartUrl + '/' + entity.id + '/' + fnType).success(function(data) {
+                    entity[opts.statusField || 'status'] = data.replace(/'/g, '');
                     toastr.success(scope.translate('dialogService.changeStatus.success'));
                   });
                 }
@@ -79,11 +82,11 @@ angular.module('mt.ui')
 
       return dialogProvider;
     }])
-    .run(["$templateCache", function($templateCache) {
-      $templateCache.put("template/messageBox/message.html",
-          '<div class="modal-header"><h3>{{ title }}</h3></div>\n' +
+    .run(['$templateCache', function($templateCache) {
+      $templateCache.put('template/messageBox/message.html',
+          '<div class="modal-header"><h3 translate="title"></h3></div>\n' +
           '<div class="modal-body"><p ng-bind-html="message"></p></div>\n' +
-          '<div class="modal-footer"><button ng-repeat="btn in buttons" ng-click="close(btn.result)" class="btn" ng-class="btn.cssClass">{{ btn.label }}</button></div>\n');
+          '<div class="modal-footer"><button ng-repeat="btn in buttons" ng-click="close(btn.result)" class="btn" ng-class="btn.cssClass" translate="btn.label"></button></div>\n');
     }])
     .controller('MessageBoxController', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
       $scope.close = function (result) { $modalInstance.close(result); }

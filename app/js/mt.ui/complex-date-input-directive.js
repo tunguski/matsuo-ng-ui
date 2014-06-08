@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('mt.ui')
     .directive('complexDate', [ '$document', '$timeout', function($document, $timeout) {
       return {

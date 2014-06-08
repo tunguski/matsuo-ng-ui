@@ -5,8 +5,15 @@ toastr = {
   info: function (msg) {
     console.log(msg);
   }
-}
+};
 
+restFactory('Test');
+
+angular.module('mt.route')
+    .constant('routeConfiguration', {
+      rootPath: 'testViews',
+      extension: '.html'
+    });
 
 angular.module('test.translate', ['mt.ui'])
     .config(function($translateProvider) {
@@ -19,7 +26,19 @@ angular.module('test.translate', ['mt.ui'])
         },
         second: "two"
       });
-    });
+    })
+    .run(['$templateCache', function($templateCache) {
+      $templateCache.put('test/dialog.html',
+              '<div class="modal-header"><h3 translate="title"></h3></div>\n' +
+              '<div class="modal-body"><p ng-bind-html="message"></p></div>\n' +
+              '<div class="modal-footer"></div>\n');
+    }])
+    .controller('TestDialogController', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+      expect($modalInstance.values.testValue).toBe('testValue');
+    }])
+    .controller('TestSimpleDialogController', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+    }])
+;
 beforeEach(module('test.translate'));
 
 

@@ -1,17 +1,19 @@
+'use strict';
+
 angular.module('mt.ui')
     .directive('dropdownMenu', [ function() {
       return {
         replace: true,
         transclude: true,
         restrict: 'EA',
-        templateUrl: "template/dropdownmenu/dropdownMenu.html"
+        templateUrl: 'template/dropdownmenu/dropdownMenu.html'
       };
     }])
     .directive('dropdownToggle', [ function() {
       return {
         replace: true,
         restrict: 'EA',
-        templateUrl: "template/dropdownmenu/dropdownToggle.html",
+        templateUrl: 'template/dropdownmenu/dropdownToggle.html',
         link: function ( scope, element, attrs ) {
           if (attrs.dropdownToggle) {
             element.html('<a class="' + attrs.dropdownToggle + '"></a>');
@@ -36,13 +38,12 @@ angular.module('mt.ui')
         }
       };
     }])
-    .run(["$templateCache", function($templateCache) {
-      $templateCache.put("template/dropdownmenu/dropdownMenu.html",
-          '<div class="btn-group" ng-transclude>' +
-          '</div>');
+    .run(['$templateCache', function($templateCache) {
+      $templateCache.put('template/dropdownmenu/dropdownMenu.html',
+          '<div class="btn-group" ng-transclude></div>');
     }])
-    .run(["$templateCache", function($templateCache) {
-      $templateCache.put("template/dropdownmenu/dropdownToggle.html",
+    .run(['$templateCache', function($templateCache) {
+      $templateCache.put('template/dropdownmenu/dropdownToggle.html',
           '<a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#"></a>');
     }])
 ;

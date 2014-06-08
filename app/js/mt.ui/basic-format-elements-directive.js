@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('mt.ui')
     .directive('hr', function factory() {
       return {

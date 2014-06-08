@@ -1,4 +1,4 @@
-
+'use strict';
 
 function formatResult(printFn) {
   return function (element) {
@@ -6,18 +6,18 @@ function formatResult(printFn) {
       try {
         return printFn(element);
       } catch (e) {
-        return "" + element;
+        return '' + element;
       }
     } else {
-      return "";
+      return '';
     }
-  }
+  };
 }
 
 
 function formatResultByField(fieldName) {
   return formatResult(function (element) {
-    return "" + element[fieldName];
+    return '' + element[fieldName];
   });
 }
 
@@ -25,14 +25,14 @@ function formatResultByField(fieldName) {
 //formatowanie wyników wyszukiwania dowolnych podmiotów
 var partyFormatResult = formatResult(function (party) {
   if (party.firstName) {
-    return "" + party.firstName + " " + party.lastName;
+    return '' + party.firstName + ' ' + party.lastName;
   } else if (party.fullName) {
-    return "" + party.fullName;
+    return '' + party.fullName;
   }
 });
 // formatowanie wyników wyszukiwania osób
 var personFormatResult = formatResult(function (person) {
-  return "" + person.firstName + " " + person.lastName + " " + person.pesel;
+  return '' + person.firstName + ' ' + person.lastName + ' ' + person.pesel;
 });
 // formatowanie wyników wyszukiwania simpleParty
 var simplePartyFormatResult = formatResultByField('name');
@@ -54,9 +54,9 @@ function extractEventEndDate(element) {
 function formatDate(date) {
   date = parseDate(date);
   if (!date || isNaN(date.getFullYear()) || isNaN(date.getMonth()) || isNaN(date.getDate())) {
-    return "";
+    return '';
   } else {
-    return date.getFullYear() + "-" + lpad(date.getMonth() + 1, 2) + "-" + lpad(date.getDate(), 2);
+    return date.getFullYear() + '-' + lpad(date.getMonth() + 1, 2) + '-' + lpad(date.getDate(), 2);
   }
 }
 
@@ -64,15 +64,15 @@ function formatDate(date) {
 function formatTime(date) {
   date = parseDate(date);
   if (date) {
-    return lpad(date.getHours(), 2) + ":" + lpad(date.getMinutes(), 2);
+    return lpad(date.getHours(), 2) + ':' + lpad(date.getMinutes(), 2);
   } else {
-    return "";
+    return '';
   }
 }
 
 
 function formatDateTime(date) {
-  return formatDate(date) + " " + formatTime(date);
+  return formatDate(date) + ' ' + formatTime(date);
 }
 
 
@@ -85,12 +85,12 @@ function parseDate(date) {
   if (date) {
     if (moment(date).isValid()) {
       return moment(date).toDate();
-    } else if (moment(date, "HH:mm").isValid()) {
-      return moment(date, "HH:mm").toDate();
-    } else if (moment(date, "YYYY-MM-DD HH:mm").isValid()) {
-      return moment(date, "YYYY-MM-DD HH:mm").toDate();
-    } else if (moment(date, "YYYY-MM-DD").isValid()) {
-      return moment(date, "YYYY-MM-DD").toDate();
+    } else if (moment(date, 'HH:mm').isValid()) {
+      return moment(date, 'HH:mm').toDate();
+    } else if (moment(date, 'YYYY-MM-DD HH:mm').isValid()) {
+      return moment(date, 'YYYY-MM-DD HH:mm').toDate();
+    } else if (moment(date, 'YYYY-MM-DD').isValid()) {
+      return moment(date, 'YYYY-MM-DD').toDate();
     }
   }
 }
@@ -105,7 +105,7 @@ function lpad(n, p, c) {
 
 /**
  * Value is considered empty if it is undefined, it is null, or (trimmed) 
- * matches "". Function matches broader - 0 is empty too.
+ * matches ''. Function matches broader - 0 is empty too.
  */
 function empty(value) {
   if( typeof value !== 'undefined' ) {
@@ -130,13 +130,13 @@ function clearObject(object) {
 
 
 var weekdayLabel = new Array(7);
-weekdayLabel[0]="Niedziela";
-weekdayLabel[1]="Poniedziałek";
-weekdayLabel[2]="Wtorek";
-weekdayLabel[3]="Środa";
-weekdayLabel[4]="Czwartek";
-weekdayLabel[5]="Piątek";
-weekdayLabel[6]="Sobota";
+weekdayLabel[0]='Niedziela';
+weekdayLabel[1]='Poniedziałek';
+weekdayLabel[2]='Wtorek';
+weekdayLabel[3]='Środa';
+weekdayLabel[4]='Czwartek';
+weekdayLabel[5]='Piątek';
+weekdayLabel[6]='Sobota';
 
 //=============================================================================
 //messages and console logging
@@ -146,7 +146,7 @@ weekdayLabel[6]="Sobota";
  * Interfejs zgodny z wymaganiami dla funkji ajax.error.
  */
 function showXhrError(jqXHR, textStatus, errorThrown) {
-  log("xhr error: " + textStatus + "; " + errorThrown);
+  log('xhr error: ' + textStatus + '; ' + errorThrown);
 }
 
 
@@ -158,7 +158,7 @@ function log(msg) {
   if (window.console && console.log) {
     console.log(msg);
   } else {
-    $("#logBox").append(msg);
+    $('#logBox').append(msg);
   }
 }
 
@@ -168,7 +168,7 @@ function err(msg){
     console.log(msg);
     console.trace();
 //  } else {
-//    $("#logBox").append(msg);
+//    $('#logBox').append(msg);
   }
 }
 
@@ -247,7 +247,7 @@ function searchQueryFunction($scope, Resource, options) {
  * na podkreślenie.
  */
 function normalizeToI18nCode(text) {
-  return (/^[0-9]/.test(text) ? "_" : "") + text.replace(/\./g, "_");
+  return (/^[0-9]/.test(text) ? '_' : '') + text.replace(/\./g, '_');
 }
 
 
@@ -263,7 +263,7 @@ function loadAndInjectInternal(elementsList, resourceService, elementGetter, ele
   angular.forEach(elementsList, function(element) {
 
     if (Object.getByPath(element, elementGetter)) {
-      elementIds["" + Object.getByPath(element, elementGetter)] = "";
+      elementIds['' + Object.getByPath(element, elementGetter)] = '';
     }
   });
 
@@ -286,7 +286,7 @@ function loadAndInjectInternal(elementsList, resourceService, elementGetter, ele
 
 
 function loadAndInject(elementsList, resourceService, elementName, idResultGetter, resultFn) {
-  loadAndInjectInternal(elementsList, resourceService, "id" + elementName.capitalize(),
+  loadAndInjectInternal(elementsList, resourceService, 'id' + elementName.capitalize(),
       elementName, idResultGetter, resultFn);
 };
 
@@ -302,8 +302,8 @@ function loadAndInject(elementsList, resourceService, elementName, idResultGette
  * Typowy błąd w konsoli:
  *     'query function not defined for Select2 undefined'
  * oznacza, że w jspku zdefiniowane zostały błędne referencje
- *     select2="[field].options"
- *     ng-model="[field].value"
+ *     select2='[field].options'
+ *     ng-model='[field].value'
  * Nie zgadzają się z definicją selecta - initializeSelect2().
  */
 function initializeSelect2($scope, path, url, formatPrefix, optionsExtensions) {
@@ -313,10 +313,10 @@ function initializeSelect2($scope, path, url, formatPrefix, optionsExtensions) {
 
   // bindId - przy zmianie wybranego elementu selecta, autoatycznie przepisz id do pola w path
   if (optionsExtensions.bindId) {
-    $scope.$watch(fieldName + ".value", function(n, o) {
+    $scope.$watch(fieldName + '.value', function(n, o) {
       // zabezpieczenie przed nieskończoną pętlą wywołań
       if (n && Object.getByPath($scope, path) !== n.id) {
-        var value = (typeof n === 'object') && ("id" in n) ? n.id : null;
+        var value = (typeof n === 'object') && ('id' in n) ? n.id : null;
         if (n.$promise) {
           n.$promise.then(function() {
             Object.setByPath($scope, path, value);
@@ -335,23 +335,23 @@ function initializeSelect2($scope, path, url, formatPrefix, optionsExtensions) {
     if (typeof optionsExtensions.bindId === 'string') {
       $scope.$watch(path, function(n, o) {
         // zabezpieczenie przed nieskończoną pętlą wywołań
-        if (n && Object.getByPath($scope, fieldName + ".value.id") !== n) {
+        if (n && Object.getByPath($scope, fieldName + '.value.id') !== n) {
           var query = {};
-          query["id" + optionsExtensions.bindId] = Object.getByPath($scope, path);
+          query['id' + optionsExtensions.bindId] = Object.getByPath($scope, path);
           var instance = $scope.getService(optionsExtensions.bindId).get(query, function() {
-            Object.setByPath($scope, fieldName + ".value", instance);
+            Object.setByPath($scope, fieldName + '.value', instance);
           });
         } else if (!n && o) {
-          Object.setByPath($scope, fieldName + ".value", null);
+          Object.setByPath($scope, fieldName + '.value', null);
         }
       });
     }
   }
 
   // bindEntity - przy zmianie wybranego elementu selecta, automatycznie przepisz obiekt do pola,
-  //              do którego prowadzi ścieżka path w atrybucie bindEntity="path"
+  //              do którego prowadzi ścieżka path w atrybucie bindEntity='path'
   if (optionsExtensions.bindEntity) {
-    $scope.$watch(fieldName + ".value", function(n, o) {
+    $scope.$watch(fieldName + '.value', function(n, o) {
       // wartość przed i po jest pusta - nie wykonuje pustej operacji
       if ((_.isUndefined(n) || n == null) && (_.isUndefined(o) || o == null)) {
         return;
@@ -404,11 +404,11 @@ function initializeSelect2($scope, path, url, formatPrefix, optionsExtensions) {
       results : function(data, page) { return { results : data }; }
     },
     // omitted for brevity, see the source of this page
-    formatResult : formatPrefix ? eval(formatPrefix + "FormatResult") : null,
+    formatResult : formatPrefix ? eval(formatPrefix + 'FormatResult') : null,
     // omitted for brevity, see the source of this page
-    formatSelection : formatPrefix ? eval(formatPrefix + "FormatResult") : null,
+    formatSelection : formatPrefix ? eval(formatPrefix + 'FormatResult') : null,
     // apply css that makes the dropdown taller
-    dropdownCssClass : "bigdrop",
+    dropdownCssClass : 'bigdrop',
     // we do not want to escape markup since we are displaying html in results
     escapeMarkup : function(m) { return m; }
   }, optionsExtensions);
