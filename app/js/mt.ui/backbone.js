@@ -22,7 +22,7 @@ function formatResultByField(fieldName) {
 }
 
 
-//formatowanie wyników wyszukiwania dowolnych podmiotów
+// general party formating function
 var partyFormatResult = formatResult(function (party) {
   if (party.firstName) {
     return '' + party.firstName + ' ' + party.lastName;
@@ -30,11 +30,11 @@ var partyFormatResult = formatResult(function (party) {
     return '' + party.fullName;
   }
 });
-// formatowanie wyników wyszukiwania osób
+// person formating function
 var personFormatResult = formatResult(function (person) {
   return '' + person.firstName + ' ' + person.lastName + ' ' + person.pesel;
 });
-// formatowanie wyników wyszukiwania simpleParty
+// simpleParty search results formating function
 var simplePartyFormatResult = formatResultByField('name');
 
 
@@ -211,7 +211,7 @@ function saveOrUpdate($scope, field, saveFn, updateFn) {
  *        .afterLoadFn - function(elements): funkcja wywoływana po wczytaniu nowej listy elementów; jako argument zostaje
  *                                           przekazana owa lista elementów
  *
- * Konfiguruje funkcję obsługującą filtrowanie danych na bazie dyrektywy simple-search.
+ * Configure query function for simple-search directive
  */
 function searchQueryFunction($scope, Resource, options) {
   options = options || {};
@@ -384,7 +384,7 @@ function initializeSelect2($scope, path, url, formatPrefix, optionsExtensions) {
     ajax : {
       url: url,
       dataType: 'json',
-      // FIXME: nie działa?
+      // FIXME: not working?
       quietMillis: 500,
       data: function(term, page) {
         var params = {
