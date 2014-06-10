@@ -9,7 +9,7 @@ describe('Form element -', function () {
     var template = compile(htmlPart)(scope);
     rootScope.$digest();
     http.flush();
-    console.log(template.html());
+    //console.log(template.html());
     expect(template.html()).toContain('<div class="field ng-scope">field</div>');
     return template;
   }

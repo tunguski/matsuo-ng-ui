@@ -20,13 +20,11 @@ angular.module('mt.ui', ['ui.bootstrap', 'ui.select2', 'mt.route', 'ngResource',
       };
     })
 
-    .filter('formatDate', function() { return formatDate; })
-    .filter('formatTime', function() { return formatTime; })
-    .filter('formatDateTime', function() { return formatDateTime; })
-    .filter('formatDayMoment', function() { return formatDayMoment; })
-    .filter('weekdayLabel', function() { return function(input) {
-      return (moment.isMoment(input) ? input : moment(input)).format('dddd');
-    }})
+    .filter('formatDate', function() { return function(input) { return parseDate(input).format('YYYY-MM-DD'); }})
+    .filter('formatTime', function() { return function(input) { return parseDate(input).format('HH:mm'); }})
+    .filter('formatDateTime', function() { return function(input) { return parseDate(input).format('YYYY-MM-DD HH:mm'); }})
+    .filter('formatDayMoment', function() { return function(input) { return parseDate(input).format('ddd HH:mm'); }})
+    .filter('weekdayLabel', function() { return function(input) { return parseDate(input).format('dddd'); }})
 
 
     .filter('addressPresenter', function() {

@@ -38,6 +38,7 @@ var personFormatResult = formatResult(function (person) {
 var simplePartyFormatResult = formatResultByField('name');
 
 
+// fixme: move to upper project
 function extractEventEndDate(element) {
   if (element.endDate) {
     return moment(element.endDate).toDate();
@@ -51,39 +52,11 @@ function extractEventEndDate(element) {
 // =============================================================================
 
 
-function formatDate(date) {
-  date = parseDate(date);
-  if (!date || isNaN(date.getFullYear()) || isNaN(date.getMonth()) || isNaN(date.getDate())) {
-    return '';
-  } else {
-    return date.getFullYear() + '-' + lpad(date.getMonth() + 1, 2) + '-' + lpad(date.getDate(), 2);
-  }
-}
-
-
-function formatTime(date) {
-  date = parseDate(date);
-  if (date) {
-    return lpad(date.getHours(), 2) + ':' + lpad(date.getMinutes(), 2);
-  } else {
-    return '';
-  }
-}
-
-
-function formatDateTime(date) {
-  return formatDate(date) + ' ' + formatTime(date);
-}
-
-
-function formatDayMoment(date) {
-  return moment(parseDate(date)).format('dddd HH:mm');
-}
-
-
 function parseDate(date) {
   if (date) {
-    if (moment(date).isValid()) {
+    if (moment.isMoment(date)) {
+      return date;
+    } else if (moment(date).isValid()) {
       return moment(date).toDate();
     } else if (moment(date, 'HH:mm').isValid()) {
       return moment(date, 'HH:mm').toDate();
@@ -95,38 +68,6 @@ function parseDate(date) {
   }
 }
 
-
-function lpad(n, p, c) {
-  var pad_char = typeof c !== 'undefined' ? c : '0';
-  var pad = new Array(1 + p).join(pad_char);
-  return (pad + n).slice(-pad.length);
-}
-
-
-/**
- * Value is considered empty if it is undefined, it is null, or (trimmed) 
- * matches ''. Function matches broader - 0 is empty too.
- */
-function empty(value) {
-  if( typeof value !== 'undefined' ) {
-    return !value || !!value.trim();
-  } else {
-    return true;
-  }
-}
-
-
-function lastUrlElement(headers) {
-  var url = headers('Location');
-  return url.substring(url.lastIndexOf('/') + 1);
-}
-
-
-function clearObject(object) {
-  _.keys(object).forEach(function (key) {
-    delete object[key];
-  });
-}
 
 //=============================================================================
 //messages and console logging
@@ -147,7 +88,7 @@ function log(msg) {
 }
 
 
-function err(msg){
+function err(msg) {
   if (window.console && console.log) {
     console.log(msg);
     console.trace();
@@ -221,20 +162,6 @@ function searchQueryFunction($scope, Resource, options) {
   $scope[refreshMethod]();
 
   $scope.$watch(queryField, $scope[refreshMethod]);
-}
-
-
-/**
- * If string starts from number, "_" prefix will be added. Each dot is converted to underscore.
- */
-function normalizeToI18nCode(text) {
-  return (/^[0-9]/.test(text) ? '_' : '') + text.replace(/\./g, '_');
-}
-
-
-function getIdFromLocation(headers) {
-  var location = headers('Location');
-  return parseInt(location.substring(location.lastIndexOf('/') + 1));
 }
 
 
