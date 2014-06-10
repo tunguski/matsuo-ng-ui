@@ -18,6 +18,7 @@ module.exports = function(config) {
       'bower_components/jquery/dist/jquery.js',
       'bower_components/underscore/underscore.js',
       'bower_components/moment/moment.js',
+      'bower_components/moment/lang/pl.js',
       'bower_components/select2/select2.js',
 
       'bower_components/angular/angular.js',

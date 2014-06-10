@@ -128,17 +128,6 @@ function clearObject(object) {
   });
 }
 
-
-// FIXME: remove and use momentjs
-var weekdayLabel = new Array(7);
-weekdayLabel[0]='Niedziela';
-weekdayLabel[1]='Poniedziałek';
-weekdayLabel[2]='Wtorek';
-weekdayLabel[3]='Środa';
-weekdayLabel[4]='Czwartek';
-weekdayLabel[5]='Piątek';
-weekdayLabel[6]='Sobota';
-
 //=============================================================================
 //messages and console logging
 //=============================================================================
