@@ -17,7 +17,7 @@ angular.module('mt.ui')
           this.baseParams = function () {
             return {
               entityClass: $scope.entityClass,
-              entityName: $scope.entityName || 'entity',
+              entityName: $scope.entityName,
               inline: $scope.inline,
               singleField: $scope.singleField,
               cssClasses: $scope.cssClasses
