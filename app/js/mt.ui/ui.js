@@ -25,7 +25,6 @@ angular.module('mt.ui', ['ui.bootstrap', 'ui.select2', 'mt.route', 'ngResource',
     .filter('formatDateTime', function() { return formatDateTime; })
     .filter('formatDayMoment', function() { return formatDayMoment; })
     .filter('weekdayLabel', function() { return function(input) {
-      // fixme: use momentjs
       return (moment.isMoment(input) ? input : moment(input)).format('dddd');
     }})
 
