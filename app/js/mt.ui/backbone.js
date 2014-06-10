@@ -129,6 +129,7 @@ function clearObject(object) {
 }
 
 
+// FIXME: remove and use momentjs
 var weekdayLabel = new Array(7);
 weekdayLabel[0]='Niedziela';
 weekdayLabel[1]='Poniedziałek';
@@ -142,16 +143,10 @@ weekdayLabel[6]='Sobota';
 //messages and console logging
 //=============================================================================
 
-/**
- * Interfejs zgodny z wymaganiami dla funkji ajax.error.
- */
-function showXhrError(jqXHR, textStatus, errorThrown) {
-  log('xhr error: ' + textStatus + '; ' + errorThrown);
-}
-
-
 $(document).ready(function() {
-  $.ajaxSetup({ error: showXhrError });
+  $.ajaxSetup({ error: function (jqXHR, textStatus, errorThrown) {
+    log('xhr error: ' + textStatus + '; ' + errorThrown);
+  } });
 });
 
 function log(msg) {
@@ -203,13 +198,11 @@ function saveOrUpdate($scope, field, saveFn, updateFn) {
 
 /**
  * options
- *        .listField - string: pole na którym ma być przypisywana lista
- *        .refreshMethod - string: nazwa pola na scopie, na które zostanie przypisana funkcja odświeżająca listę
- *                                 wraz ze zmianą treści 'query'
- *        .queryField - string: nazwa pola na scopie na którym znajduje się wyrazenie filtrowania
- *        .minLength - int: minimalna liczba znaków dla filtrowania
- *        .afterLoadFn - function(elements): funkcja wywoływana po wczytaniu nowej listy elementów; jako argument zostaje
- *                                           przekazana owa lista elementów
+ *        .listField - string: field to which result list will be put
+ *        .refreshMethod - string: scope param with function invoked at each 'query' text change
+ *        .queryField - string: scope field containing filter query
+ *        .minLength - int: minimum query chars to start ajax invocations
+ *        .afterLoadFn - function(elements): function invoked after loading query results
  *
  * Configure query function for simple-search directive
  */
@@ -243,8 +236,7 @@ function searchQueryFunction($scope, Resource, options) {
 
 
 /**
- * Jeśli napis zaczyna się od cyfry, dokleja do niego podkreślenie. Każda kropka zostaje zamieniona
- * na podkreślenie.
+ * If string starts from number, "_" prefix will be added. Each dot is converted to underscore.
  */
 function normalizeToI18nCode(text) {
   return (/^[0-9]/.test(text) ? '_' : '') + text.replace(/\./g, '_');
@@ -295,26 +287,26 @@ function loadAndInject(elementsList, resourceService, elementName, idResultGette
  * optionsExtensions
  *                  .bindId - boolean, string:Resource
  *                  .bindEntity - string:path, function
- *                  .removeProperties - array[string]: atrybuty domyślne do usunięcia
- *                  .definedElements - lista elementów selecta (wyłączone wczytywanie ajaxowe)
- *                  .additionalQueryParams - obiekt parametrów dodawanych do requesta
+ *                  .removeProperties - array[string]: attributes to remove from default config
+ *                  .definedElements - list of select's values (if set, ajax is disabled)
+ *                  .additionalQueryParams - additional ajax query static params
  *
- * Typowy błąd w konsoli:
+ * Usual error in console:
  *     'query function not defined for Select2 undefined'
- * oznacza, że w jspku zdefiniowane zostały błędne referencje
+ * means that wrong references to select model in view are defined. It should look like this:
  *     select2='[field].options'
  *     ng-model='[field].value'
- * Nie zgadzają się z definicją selecta - initializeSelect2().
+ * If not, they are not consistent with configuration - initializeSelect2().
  */
 function initializeSelect2($scope, path, url, formatPrefix, optionsExtensions) {
   optionsExtensions = optionsExtensions || {};
   var fieldName = path.split('.').slice(-1)[0];
   var obj = Object.getOrCreate($scope, fieldName);
 
-  // bindId - przy zmianie wybranego elementu selecta, autoatycznie przepisz id do pola w path
+  // bindId - when select's value changed, rewrite object's id to field described by path int bindId attr
   if (optionsExtensions.bindId) {
     $scope.$watch(fieldName + '.value', function(n, o) {
-      // zabezpieczenie przed nieskończoną pętlą wywołań
+      // infinite loop protection
       if (n && Object.getByPath($scope, path) !== n.id) {
         var value = (typeof n === 'object') && ('id' in n) ? n.id : null;
         if (n.$promise) {
@@ -329,12 +321,11 @@ function initializeSelect2($scope, path, url, formatPrefix, optionsExtensions) {
       }
     });
 
-    // jeśli wartością bindId jest napis, to oznacza jakiego serwisu Resource użyć, aby pobrać
-    // wartość pola przy zmianie id'ka w obiekcie. w efekcie możliwe jest ustawienie selecta po
-    // wczytaniu encji modelu
+    // If bindId value is string, it defines what Resource to use to load object by id. This way it's possible to
+    // set select's value after entity loading.
     if (typeof optionsExtensions.bindId === 'string') {
       $scope.$watch(path, function(n, o) {
-        // zabezpieczenie przed nieskończoną pętlą wywołań
+        // infinite loop protection
         if (n && Object.getByPath($scope, fieldName + '.value.id') !== n) {
           var query = {};
           query['id' + optionsExtensions.bindId] = Object.getByPath($scope, path);
@@ -348,8 +339,8 @@ function initializeSelect2($scope, path, url, formatPrefix, optionsExtensions) {
     }
   }
 
-  // bindEntity - przy zmianie wybranego elementu selecta, automatycznie przepisz obiekt do pola,
-  //              do którego prowadzi ścieżka path w atrybucie bindEntity='path'
+  // bindEntity - when select's value changed, automaticaly rewrite selected object (not id) to field described by
+  //              path in attribute bindEntity='path'
   if (optionsExtensions.bindEntity) {
     $scope.$watch(fieldName + '.value', function(n, o) {
       // wartość przed i po jest pusta - nie wykonuje pustej operacji
