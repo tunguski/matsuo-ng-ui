@@ -15,8 +15,8 @@ logs
 results
 
 node_modules
-
 bower_components
+coverage
 
 # contains secret repo token
 .coveralls.yml
