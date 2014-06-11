@@ -1,0 +1,27 @@
+{
+  "name": "matsuo-ng-ui",
+  "version": "0.1.0",
+  "authors": [
+    "Marek Romanowski <marek.romanowski@gmail.com>"
+  ],
+  "description": "Matsuo IT AngularJs User Interface extensions",
+  "keywords": [
+    "AngularJS",
+    "UI"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "3.1.1",
+    "highlightjs": "~8.0.0",
+    "jquery": "1.11.1"
+  },
+  "devDependencies": {
+  }
+}

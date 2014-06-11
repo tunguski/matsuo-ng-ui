@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Matsuo Angular UI</title>
+
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="bower_components/highlightjs/styles/github.css" />
+	<link rel="stylesheet" href="main.css" />
+
+</head>
+<body>
+
+  <header>
+    <div class="jumbotron">
+      <div class="container">
+        <h1>Matsuo Angular UI</h1>
+        <p>Angular UI extensions used by Matsuo IT</p>
+        <p><a class="btn btn-info btn-lg" href="https://github.com/tunguski/matsuo-ng-ui">Github repository</a></p>
+      </div>
+    </div>
+  </header>
+
+
+  <div class="feature-section">
+    <div class="container">
+      <h2>New directives for widgets</h2>
+      <p>
+        Matsuo-ng-ui brings you a bunch of additional directives for composing view.
+      </p>
+    </div>
+  </div>
+
+
+  <div class="feature-section">
+    <div class="container">
+      <h2>Simple routing configuration</h2>
+      <p>
+        Automatic view resolution with simple generic rules. Anyone needs five thirty seconds to understand how it
+        works in every single situation.
+      </p>
+    </div>
+  </div>
+
+
+  <div class="feature-section">
+    <div class="container">
+      <h2>Form validation automation - with server side errors too!</h2>
+      <p>
+        Angular.js brings fantastic support for form validation. Matsuo-ng-ui extends that to server-side validation
+        and no-form cases too.
+      </p>
+    </div>
+  </div>
+
+
+  <div class="feature-section">
+    <div class="container">
+      <h2>Simplified working with modals in 99% of cases.</h2>
+      <p>
+        $dialog service is basing on angular-ui $modal directive and gives you a simple tool for constructing modals
+        in most common situations.
+      </p>
+    </div>
+  </div>
+
+
+  <div class="feature-section">
+    <div class="container">
+      <h2>Advanced search query configuration - automated</h2>
+      <p>
+        Searches are the heart of db-centric applications. So when showing db data, elastic search tools are most
+        valuable of all.
+      </p>
+    </div>
+  </div>
+
+
+  <div class="feature-section">
+    <div class="container">
+      <h2>Select2 integration</h2>
+      <p>
+        Configure your select 2 in single line with ajax, resource handling etc.
+      </p>
+    </div>
+  </div>
+
+
+  <div class="feature-section">
+    <div class="container">
+      <h2>Create bootstrap form fields in one line</h2>
+      <p>
+        With error handling, server-side validation, help information, translation, model rewrite etc.
+      </p>
+    </div>
+  </div>
+
+
+  <!--
+  <div class="feature-section">
+    <div class="container">
+      <h2>Underscore additional functions</h2>
+      <table class="table">
+        <tr>
+          <th>Function</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td><code>setByPath(object, path, value)</code></td>
+          <td>
+            <p>
+              Sets property in <code>object</code> accessed by <code>path</code> to <code>value</code>. That means after:
+            <pre><code>_.setByPath({ elem: { val: {} }}, 'elem.val.foo', "x")</code></pre>
+            invoking <code>elem.val.foo</code> will return <code>"x"</code>.
+            If any part of <code>path</code> is undefined, nothing will be set.
+            </p>
+          </td>
+        </tr>
+      </table>
+      <p>
+      </p>
+    </div>
+  </div>
+  -->
+
+
+  <div class="feature-section">
+    <div class="container">
+      <h2>License</h2>
+      This project is licensed under terms of <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache 2.0 License</a>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <h5>Matsuo IT 2014</h5>
+    </div>
+  </footer>
+
+  <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript" src="bower_components/highlightjs/highlight.pack.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+    $('code').each(function(i, e) {hljs.highlightBlock(e)});
+  </script>
+</body>
+</html>
