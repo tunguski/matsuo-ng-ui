@@ -17,3 +17,6 @@ results
 node_modules
 
 bower_components
+
+# contains secret repo token
+.coveralls.yml
