@@ -5,14 +5,14 @@ angular.module('mt.ui')
       return {
         link: function ( scope, element, attrs ) {
           scope.$watch( attrs.mtFocusModel, function ( val ) {
-            log(attrs.mtFocusModel + ' : ' + val);
+//            log(attrs.mtFocusModel + ' : ' + val);
             if ( angular.isDefined( val ) && val ) {
               $timeout( function () {
                 if (element.data('select2')) {
-                  log('elem select: ' + element);
+//                  log('elem select: ' + element);
                   element.select2('focus');
                 } else {
-                  log('elem other: ' + element);
+//                  log('elem other: ' + element);
                   element.focus();
                 }
               });

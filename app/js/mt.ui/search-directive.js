@@ -25,7 +25,8 @@ angular.module('mt.ui')
           scope.showSearchButton = iAttrs.search;
 
           if (iAttrs.placeholder) {
-            iElement.children(0).attr('placeholder', iAttrs.placeholder);
+            // form -> div -> input
+            iElement.find('input').attr('placeholder', iAttrs.placeholder);
           }
         }
       };
