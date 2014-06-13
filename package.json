@@ -1,6 +1,10 @@
 {
   "name": "matsuo-ng-ui",
   "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:tunguski/matsuo-ng-ui.git"
+  },
   "dependencies": {},
   "devDependencies": {
     "connect": "^2.19.4",
