@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('mt.ui')
+angular.module('mt.ui.dev')
     .directive('complexDate', [ '$document', '$timeout', function($document, $timeout) {
       return {
         replace: true,

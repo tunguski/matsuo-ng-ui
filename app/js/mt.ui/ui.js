@@ -268,3 +268,7 @@ function HelpDialogController($scope, $modalInstance) {
   $scope.close = function(result) { $modalInstance.close(result); }
 }
 
+/**
+ * For unstable directives.
+ */
+angular.module('mt.ui.dev', ['mt.ui']);

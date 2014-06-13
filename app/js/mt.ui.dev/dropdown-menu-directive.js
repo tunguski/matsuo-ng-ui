@@ -4,7 +4,7 @@
  * Unsued
  */
 
-angular.module('mt.ui')
+angular.module('mt.ui.dev')
     .directive('dropdownMenu', [ function() {
       return {
         replace: true,
