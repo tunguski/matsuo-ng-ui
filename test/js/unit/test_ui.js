@@ -68,5 +68,54 @@ describe('UI -', function () {
       expect($filter('addressPresenter')(address)).toBe('Warszawa<br/>Starzyńskiego 17');
     });
   });
+
+  describe('setTitle', function () {
+    var $timeout;
+    beforeEach(inject(function (_$timeout_) {
+      $timeout = _$timeout_;
+    }));
+
+    it('sets static title', function () {
+      rootScope.setTitle('test');
+      expect(rootScope.title).toBe('test');
+    });
+
+    it('sets dynamic title', function () {
+      scope.name = 'Kryspin';
+      rootScope.setTitle('<span>test {{name}}</span>', scope);
+
+      $timeout.flush();
+
+      expect(angular.element(rootScope.title).text()).toBe('test Kryspin');
+    });
+  });
+
+  it('printing file works', function () {
+    rootScope.printFile('/api/prints/4324343');
+
+    expect($('iframe').length).toBe(1);
+  });
+
+  describe('controllers', function () {
+    describe('AppController', function () {
+      beforeEach(inject(function ($controller) {
+        controller = $controller('AppController', {$scope: scope});
+      }));
+
+      it ('login works', function () {
+        scope.loginData = {
+          username: 'testUser',
+          password: 'testPassword'
+        };
+
+        http.expectGET('/api/login').respond('');
+        http.expectPOST('/api/login').respond('OK');
+        http.expectGET('/api/login/user').respond('{}');
+        http.expectGET('/api/login/user').respond('{}');
+        scope.login();
+        http.flush();
+      });
+    });
+  });
 });
 

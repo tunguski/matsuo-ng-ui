@@ -15,6 +15,20 @@ angular.module('mt.route')
       extension: '.html'
     });
 
+angular.module('mt.route')
+    .factory('userGroupConfiguration', ['$route', '$rootScope', '$location', 'routeConfiguration',
+      function($route, $rootScope, $location, routeConfiguration) {
+        var userGroupConfiguration = {
+          refreshAppUserConfiguration: function () {
+            var groups = _.pluck($rootScope.user.groups, 'name');
+            routeConfiguration.defaultRoute = '/base/registration'
+            $route.routes['null'] = routeConfiguration.defaultRoute;
+            //$location.url(routeConfiguration.defaultRoute);
+          }
+        };
+        return userGroupConfiguration;
+      }]);
+
 angular.module('test.translate', ['mt.ui'])
     .config(function($translateProvider) {
       // ustawiamy globalnie locale
