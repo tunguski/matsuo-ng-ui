@@ -32,7 +32,7 @@ var partyFormatResult = formatResult(function (party) {
 });
 // person formating function
 var personFormatResult = formatResult(function (person) {
-  return '' + person.firstName + ' ' + person.lastName + ' ' + person.pesel;
+  return '' + person.firstName + ' ' + person.lastName + (person.pesel ? ' ' + person.pesel : '');
 });
 // simpleParty search results formating function
 var simplePartyFormatResult = formatResultByField('name');
@@ -57,13 +57,13 @@ function parseDate(date) {
     if (moment.isMoment(date)) {
       return date;
     } else if (moment(date).isValid()) {
-      return moment(date).toDate();
+      return moment(date);
     } else if (moment(date, 'HH:mm').isValid()) {
-      return moment(date, 'HH:mm').toDate();
+      return moment(date, 'HH:mm');
     } else if (moment(date, 'YYYY-MM-DD HH:mm').isValid()) {
-      return moment(date, 'YYYY-MM-DD HH:mm').toDate();
+      return moment(date, 'YYYY-MM-DD HH:mm');
     } else if (moment(date, 'YYYY-MM-DD').isValid()) {
-      return moment(date, 'YYYY-MM-DD').toDate();
+      return moment(date, 'YYYY-MM-DD');
     }
   }
 }
