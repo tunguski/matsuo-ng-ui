@@ -104,7 +104,7 @@ function isBetween(date, from, to) {
 
 
 function scopeSetter(scope, propertyName) {
-  return function (data) { Object.setByPath(scope, propertyName, data); }
+  return function (data) { _.setByPath(scope, propertyName, data); }
 }
 
 
@@ -170,8 +170,8 @@ function loadAndInjectInternal(elementsList, resourceService, elementGetter, ele
 
   angular.forEach(elementsList, function(element) {
 
-    if (Object.getByPath(element, elementGetter)) {
-      elementIds['' + Object.getByPath(element, elementGetter)] = '';
+    if (_.getByPath(element, elementGetter)) {
+      elementIds['' + _.getByPath(element, elementGetter)] = '';
     }
   });
 
@@ -179,8 +179,8 @@ function loadAndInjectInternal(elementsList, resourceService, elementGetter, ele
     resourceService.listByIds({ ids: _.keys(elementIds) }, function(data) {
       angular.forEach(data, function(resultElement) {
         angular.forEach(elementsList, function(element) {
-          if (Object.getByPath(element, elementGetter) === resultElement[idResultGetter]) {
-            Object.setByPath(element, elementName, resultElement);
+          if (_.getByPath(element, elementGetter) === resultElement[idResultGetter]) {
+            _.setByPath(element, elementName, resultElement);
           }
         });
       });
@@ -217,23 +217,23 @@ function loadAndInject(elementsList, resourceService, elementName, idResultGette
 function initializeSelect2($scope, path, url, formatPrefix, optionsExtensions) {
   optionsExtensions = optionsExtensions || {};
   var fieldName = path.split('.').slice(-1)[0];
-  var obj = Object.getOrCreate($scope, fieldName);
+  var obj = _.getOrCreate($scope, fieldName);
 
   // bindId - when select's value changed, rewrite object's id to field described by path int bindId attr
   if (optionsExtensions.bindId) {
     $scope.$watch(fieldName + '.value', function(n, o) {
       // infinite loop protection
-      if (n && Object.getByPath($scope, path) !== n.id) {
+      if (n && _.getByPath($scope, path) !== n.id) {
         var value = (typeof n === 'object') && ('id' in n) ? n.id : null;
         if (n.$promise) {
           n.$promise.then(function() {
-            Object.setByPath($scope, path, value);
+            _.setByPath($scope, path, value);
           });
         } else {
-          Object.setByPath($scope, path, value);
+          _.setByPath($scope, path, value);
         }
       } else if (!n && o) {
-        Object.setByPath($scope, path, null);
+        _.setByPath($scope, path, null);
       }
     });
 
@@ -242,14 +242,14 @@ function initializeSelect2($scope, path, url, formatPrefix, optionsExtensions) {
     if (typeof optionsExtensions.bindId === 'string') {
       $scope.$watch(path, function(n, o) {
         // infinite loop protection
-        if (n && Object.getByPath($scope, fieldName + '.value.id') !== n) {
+        if (n && _.getByPath($scope, fieldName + '.value.id') !== n) {
           var query = {};
-          query['id' + optionsExtensions.bindId] = Object.getByPath($scope, path);
+          query['id' + optionsExtensions.bindId] = _.getByPath($scope, path);
           var instance = $scope.getService(optionsExtensions.bindId).get(query, function() {
-            Object.setByPath($scope, fieldName + '.value', instance);
+            _.setByPath($scope, fieldName + '.value', instance);
           });
         } else if (!n && o) {
-          Object.setByPath($scope, fieldName + '.value', null);
+          _.setByPath($scope, fieldName + '.value', null);
         }
       });
     }
@@ -265,7 +265,7 @@ function initializeSelect2($scope, path, url, formatPrefix, optionsExtensions) {
       }
 
       if (angular.isString(optionsExtensions.bindEntity)) {
-        Object.setByPath($scope, optionsExtensions.bindEntity, n);
+        _.setByPath($scope, optionsExtensions.bindEntity, n);
       } else if (angular.isFunction(optionsExtensions.bindEntity)) {
         optionsExtensions.bindEntity(n);
       }

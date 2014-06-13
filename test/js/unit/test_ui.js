@@ -66,6 +66,8 @@ describe('UI -', function () {
 
       address.zipCode = undefined;
       expect($filter('addressPresenter')(address)).toBe('Warszawa<br/>Starzyńskiego 17');
+
+      expect($filter('addressPresenter')(undefined)).toBe(undefined);
     });
   });
 
@@ -117,5 +119,10 @@ describe('UI -', function () {
       });
     });
   });
+
+  it('hasService', function () {
+    expect(rootScope.hasService('$filter')).toBe(true);
+    expect(rootScope.hasService('$fdafsdaafsdfadafdafad')).toBe(false);
+  })
 });
 
