@@ -10,20 +10,19 @@ toastr = {
 restFactory('Test');
 
 angular.module('mt.route')
-    .constant('routeConfiguration', {
-      rootPath: 'testViews',
-      extension: '.html'
+    .config(function (mtRouteConfig) {
+      mtRouteConfig.rootPath = 'testViews';
     });
 
 angular.module('mt.route')
-    .factory('userGroupConfiguration', ['$route', '$rootScope', '$location', 'routeConfiguration',
-      function($route, $rootScope, $location, routeConfiguration) {
+    .factory('userGroupConfiguration', ['$route', '$rootScope', '$location', 'mtRouteConfig',
+      function($route, $rootScope, $location, mtRouteConfig) {
         var userGroupConfiguration = {
           refreshAppUserConfiguration: function () {
             var groups = _.pluck($rootScope.user.groups, 'name');
-            routeConfiguration.defaultRoute = '/base/registration'
-            $route.routes['null'] = routeConfiguration.defaultRoute;
-            //$location.url(routeConfiguration.defaultRoute);
+            mtRouteConfig.defaultRoute = '/base/registration'
+            $route.routes['null'] = mtRouteConfig.defaultRoute;
+            //$location.url(mtRouteConfig.defaultRoute);
           }
         };
         return userGroupConfiguration;
