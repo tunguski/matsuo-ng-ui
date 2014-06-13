@@ -21,8 +21,8 @@ angular.module('mt.ui')
 
           element.bind('blur', function () {
             attrs.mtFocusModel = false;
-            if ( angular.isDefined( attrs.ngFocusLost ) ) {
-              scope.$apply( attrs.ngFocusLost );
+            if ( angular.isDefined( attrs.mtFocusLost ) ) {
+              scope.$apply( attrs.mtFocusLost );
 
             }
           });
