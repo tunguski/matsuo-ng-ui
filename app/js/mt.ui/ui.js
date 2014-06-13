@@ -195,7 +195,7 @@ function baseAppController($scope, $route, $rootScope, $location, $timeout, $dia
   };
 
   $scope.remindPassword = function() {
-    $dialog.simpleDialog('login/remindPassword.html', 'RemindPasswordDialogController')();
+    $dialog.simpleDialog('/views/login/remindPasswordModal.html', 'RemindPasswordDialogController')();
   };
 
   $timeout(function() {

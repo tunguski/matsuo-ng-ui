@@ -52,7 +52,7 @@ angular.module('mt.ui')
                 });
 
 
-            return "/field/url.html?" + _.toUrlParams(params);
+            return "/api/bootstrap?" + _.toUrlParams(params);
           };
 
         }
