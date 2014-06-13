@@ -111,10 +111,71 @@ describe('UI -', function () {
         };
 
         http.expectGET('/api/login').respond('');
-        http.expectPOST('/api/login').respond('OK');
+        http.expectPOST('/api/login').respond('');
         http.expectGET('/api/login/user').respond('{}');
         http.expectGET('/api/login/user').respond('{}');
         scope.login();
+        http.flush();
+      });
+
+      it('isLoggedIn', function () {
+        rootScope.loggedIn = true;
+        expect(scope.isLoggedIn()).toBe(true);
+        rootScope.loggedIn = false;
+        expect(scope.isLoggedIn()).toBe(false);
+        rootScope.loggedIn = undefined;
+        expect(scope.isLoggedIn()).toBe(false);
+      });
+
+      it('isLoggedOff', function () {
+        rootScope.loggedIn = true;
+        expect(scope.isLoggedOff()).toBe(false);
+        rootScope.loggedIn = false;
+        expect(scope.isLoggedOff()).toBe(true);
+        rootScope.loggedIn = undefined;
+        expect(scope.isLoggedOff()).toBe(false);
+      });
+
+      it('logoff', function () {
+        rootScope.loggedIn = true;
+
+        http.expectGET('/api/login').respond('');
+        http.expectPOST('/api/login/logoff').respond('');
+        scope.logoff()
+        http.flush();
+
+        expect(rootScope.loggedIn).toBe(false);
+      });
+    });
+
+    describe('RemindPasswordDialogController', function () {
+      var $modalInstance;
+      beforeEach(inject(function ($controller) {
+        $modalInstance = {
+          close: function () {}
+        };
+        controller = $controller('RemindPasswordDialogController', {$scope: scope, $modalInstance: $modalInstance});
+      }));
+
+      it('remindPassword', function () {
+        scope.remind.username = 'testowy'
+        http.expectPOST('/api/login/remindPassword/testowy').respond('');
+        scope.remindPassword();
+        http.flush();
+      });
+    });
+
+    describe('HeaderController', function () {
+      var $location;
+      beforeEach(inject(function ($controller, _$location_) {
+        controller = $controller('HeaderController', {$scope: scope});
+        $location = _$location_;
+      }));
+
+      it('showHelp', function () {
+        $location.path('/base/info')
+        http.expectGET('help/base/infoHelp.html').respond('<div>help content</div>')
+        scope.showHelp();
         http.flush();
       });
     });
@@ -123,6 +184,6 @@ describe('UI -', function () {
   it('hasService', function () {
     expect(rootScope.hasService('$filter')).toBe(true);
     expect(rootScope.hasService('$fdafsdaafsdfadafdafad')).toBe(false);
-  })
+  });
 });
 
