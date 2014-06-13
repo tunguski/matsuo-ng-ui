@@ -21,10 +21,6 @@ angular.module('mt.ui')
             '</ul>' +
             '</div>',
         link: function (scope, iElement, iAttrs) {
-          scope.showButton = function () {
-            return scope.fileName || scope.model.id;
-          };
-
           function generateLink(type) { return function () {
             if (scope.model) {
               return scope.fileName ? '/api/reports/' + type + '/' + scope.fileName + '?' + _.toUrlParams(scope.model)

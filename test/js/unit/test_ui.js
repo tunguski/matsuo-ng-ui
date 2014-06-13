@@ -50,6 +50,23 @@ describe('UI -', function () {
       date.lang('en');
       expect($filter('formatDayMoment')(date)).toBe('Fri 09:30');
     });
+
+    it('formats address correctly', function () {
+      var address = {
+        zipCode: '22-333',
+        town: 'Warszawa',
+        street: 'Starzyńskiego',
+        houseNumber: '17',
+        apartmentNumber: '20'
+      };
+      expect($filter('addressPresenter')(address)).toBe('22-333 Warszawa<br/>Starzyńskiego 17 / 20');
+
+      address.apartmentNumber = undefined;
+      expect($filter('addressPresenter')(address)).toBe('22-333 Warszawa<br/>Starzyńskiego 17');
+
+      address.zipCode = undefined;
+      expect($filter('addressPresenter')(address)).toBe('Warszawa<br/>Starzyńskiego 17');
+    });
   });
 });
 
