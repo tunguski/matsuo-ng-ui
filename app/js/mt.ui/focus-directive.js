@@ -1,24 +1,26 @@
 'use strict';
 
 angular.module('mt.ui')
-    .directive('ngFocusModel', function($timeout) {
+    .directive('mtFocusModel', function($timeout) {
       return {
         link: function ( scope, element, attrs ) {
-          scope.$watch( attrs.ngFocusModel, function ( val ) {
-            log(attrs.ngFocusModel + ' : ' + val);
+          scope.$watch( attrs.mtFocusModel, function ( val ) {
+            log(attrs.mtFocusModel + ' : ' + val);
             if ( angular.isDefined( val ) && val ) {
               $timeout( function () {
-                if (element.select2) {
+                if (element.data('select2')) {
+                  log('elem select: ' + element);
                   element.select2('focus');
                 } else {
-                  element[0].focus();
+                  log('elem other: ' + element);
+                  element.focus();
                 }
               });
             }
           }, true);
 
           element.bind('blur', function () {
-            attrs.ngFocusModel = false;
+            attrs.mtFocusModel = false;
             if ( angular.isDefined( attrs.ngFocusLost ) ) {
               scope.$apply( attrs.ngFocusLost );
 

@@ -141,7 +141,7 @@ describe('UI -', function () {
 
         http.expectGET('/api/login').respond('');
         http.expectPOST('/api/login/logoff').respond('');
-        scope.logoff()
+        scope.logoff();
         http.flush();
 
         expect(rootScope.loggedIn).toBe(false);
@@ -158,7 +158,7 @@ describe('UI -', function () {
       }));
 
       it('remindPassword', function () {
-        scope.remind.username = 'testowy'
+        scope.remind.username = 'testowy';
         http.expectPOST('/api/login/remindPassword/testowy').respond('');
         scope.remindPassword();
         http.flush();
@@ -173,8 +173,8 @@ describe('UI -', function () {
       }));
 
       it('showHelp', function () {
-        $location.path('/base/info')
-        http.expectGET('help/base/infoHelp.html').respond('<div>help content</div>')
+        $location.path('/base/info');
+        http.expectGET('help/base/infoHelp.html').respond('<div>help content</div>');
         scope.showHelp();
         http.flush();
       });
