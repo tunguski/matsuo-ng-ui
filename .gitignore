@@ -9,6 +9,7 @@
 .idea
 *.iml
 *.DS_Store
+*.swp
 lib-cov
 pids
 logs

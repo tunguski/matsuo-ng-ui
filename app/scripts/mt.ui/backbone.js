@@ -60,10 +60,6 @@ function parseDate(date) {
       return moment(date);
     } else if (moment(date, 'HH:mm').isValid()) {
       return moment(date, 'HH:mm');
-    } else if (moment(date, 'YYYY-MM-DD HH:mm').isValid()) {
-      return moment(date, 'YYYY-MM-DD HH:mm');
-    } else if (moment(date, 'YYYY-MM-DD').isValid()) {
-      return moment(date, 'YYYY-MM-DD');
     }
   }
 }
@@ -72,12 +68,6 @@ function parseDate(date) {
 //=============================================================================
 //messages and console logging
 //=============================================================================
-
-$(document).ready(function() {
-  $.ajaxSetup({ error: function (jqXHR, textStatus, errorThrown) {
-    log('xhr error: ' + textStatus + '; ' + errorThrown);
-  } });
-});
 
 function log(msg) {
   if (window.console && console.log) {
@@ -97,6 +87,14 @@ function err(msg) {
   }
 }
 
+
+$(document).ready(function() {
+  $.ajaxSetup({ error: function (jqXHR, textStatus, errorThrown) {
+    log('xhr error: ' + textStatus + '; ' + errorThrown);
+  } });
+});
+
+
 function isBetween(date, from, to) {
   var dateMoment = moment(date);
   return dateMoment.isAfter(moment(from)) && dateMoment.isBefore(moment(to));
@@ -104,7 +102,7 @@ function isBetween(date, from, to) {
 
 
 function scopeSetter(scope, propertyName) {
-  return function (data) { _.setByPath(scope, propertyName, data); }
+  return function (data) { _.setByPath(scope, propertyName, data); };
 }
 
 
@@ -115,14 +113,14 @@ function saveOrUpdate($scope, field, saveFn, updateFn) {
     return function (entity, headers) {
       validationFn();
       invokeFn(entity, headers);
-    }
+    };
   }
 
   return function() {
     var entity = $scope[field];
     return entity.isNew() ? entity.$save({}, successFn(saveFn), validationFn)
         : entity.$update({}, successFn(updateFn), validationFn);
-  }
+  };
 }
 
 
@@ -158,7 +156,7 @@ function searchQueryFunction($scope, Resource, options) {
         options.afterLoadFn(data);
       }
     });
-  }
+  };
   $scope[refreshMethod]();
 
   $scope.$watch(queryField, $scope[refreshMethod]);
@@ -194,9 +192,9 @@ function loadAndInjectInternal(elementsList, resourceService, elementGetter, ele
 
 
 function loadAndInject(elementsList, resourceService, elementName, idResultGetter, resultFn) {
-  loadAndInjectInternal(elementsList, resourceService, 'id' + elementName.capitalize(),
+  loadAndInjectInternal(elementsList, resourceService, 'id' + _.capitalize(elementName),
       elementName, idResultGetter, resultFn);
-};
+}
 
 
 /**
@@ -260,7 +258,7 @@ function initializeSelect2($scope, path, url, formatPrefix, optionsExtensions) {
   if (optionsExtensions.bindEntity) {
     $scope.$watch(fieldName + '.value', function(n, o) {
       // wartość przed i po jest pusta - nie wykonuje pustej operacji
-      if ((_.isUndefined(n) || n == null) && (_.isUndefined(o) || o == null)) {
+      if ((_.isUndefined(n) || n === null) && (_.isUndefined(o) || o === null)) {
         return;
       }
 
@@ -311,9 +309,9 @@ function initializeSelect2($scope, path, url, formatPrefix, optionsExtensions) {
       results : function(data, page) { return { results : data }; }
     },
     // omitted for brevity, see the source of this page
-    formatResult : formatPrefix ? eval(formatPrefix + 'FormatResult') : null,
+    formatResult : formatPrefix ? window[formatPrefix + 'FormatResult'] : null,
     // omitted for brevity, see the source of this page
-    formatSelection : formatPrefix ? eval(formatPrefix + 'FormatResult') : null,
+    formatSelection : formatPrefix ? window[formatPrefix + 'FormatResult'] : null,
     // apply css that makes the dropdown taller
     dropdownCssClass : 'bigdrop',
     // we do not want to escape markup since we are displaying html in results

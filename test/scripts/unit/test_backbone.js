@@ -1,6 +1,15 @@
 describe('Backbone', function () {
 
 
+  it('formatResult', function () {
+    var formatFunction = formatResult(function (a) { return '' + a; });
+    expect(formatFunction('tobby')).toBe('tobby');
+    expect(formatFunction()).toBe('');
+    formatFunction = formatResult(function (a) { throw {}; });
+    expect(formatFunction('jamie')).toBe('jamie');
+  });
+
+
   it('formatResultByField', function () {
     expect(formatResultByField('xxx')({ xxx: 'yyy'})).toBe('yyy');
     expect(formatResultByField('a')({ a: '77'})).toBe('77');
@@ -32,12 +41,15 @@ describe('Backbone', function () {
 
   it('parseDate', function () {
     expect(moment.isMoment(parseDate('2014-01-01'))).toBe(true);
+    expect(moment.isMoment(parseDate('12:14'))).toBe(true);
+    expect(moment.isMoment(parseDate('2014-01-01 12:14'))).toBe(true);
   });
 
 
   it('isBetween', function () {
-    expect().toBe();
-    expect().toBe();
+    expect(isBetween('2014-04-04', '2014-04-01', '2014-04-11')).toBe(true);
+    expect(isBetween('2014-04-01', '2014-04-04', '2014-04-11')).toBe(false);
+    expect(isBetween('2014-04-04', '2014-04-04', '2014-04-11')).toBe(false);
   });
 
 
@@ -48,8 +60,31 @@ describe('Backbone', function () {
 
 
   it('saveOrUpdate', function () {
-    expect().toBe();
-    expect().toBe();
+    var updated = false;
+    var save = function () {};
+    var update = function () {
+      updated = true;
+    };
+    scope.myField = {
+      id: 7,
+      name: 'test_name',
+      isNew: function () { return false; },
+      $update: function (params, successFn, validationFn) {
+        successFn();
+      },
+      $save: function (params, successFn, validationFn) {
+        successFn();
+      }
+    };
+    var saveOrUpdateFn = saveOrUpdate(scope, 'myField', save, update);
+    saveOrUpdateFn();
+    expect(updated).toBe(true);
+  });
+
+
+  it('err logger', function () {
+    // no error
+    err('xxx');
   });
 
 
@@ -70,19 +105,74 @@ describe('Backbone', function () {
       http.flush();
 
       expect(scope.elements.length).toBe(2);
+      expect(scope.refresh).toBeDefined();
+    });
+
+    it('complex', function () {
+      var afterLoadExecuted = false;
+      searchQueryFunction(scope, Test, {
+        afterLoadFn: function () { afterLoadExecuted = true; },
+        refreshMethod: 'refreshMethod',
+        minLength: 3
+      });
+      scope.query = 'fafa';
+
+      http.expectGET('/api/tests?query=fafa').respond('[{}, {}]');
+      scope.$digest();
+      http.flush();
+
+      expect(afterLoadExecuted).toBe(true);
+      expect(scope.refreshMethod).toBeDefined();
+      scope.refreshMethod([ 'a' ]);
     });
   });
 
 
   it('loadAndInjectInternal', function () {
-    expect().toBe();
-    expect().toBe();
+    var Test;
+    inject(function (_Test_) {
+      Test = _Test_;
+    });
+
+    var resultFnExecuted = false;
+
+    scope.list = [{
+      idEntity: 7
+    }];
+
+    http.expectGET('/api/tests/list/byIds?ids=7').respond('[{ "id": 7 }]'); 
+    loadAndInjectInternal(scope.list, Test, 'idEntity', 'entity', 'id', function () {
+      resultFnExecuted = true;
+    });
+    http.flush();
+
+    expect(scope.list[0].entity).toBeDefined();
+    expect(scope.list[0].entity.id).toBe(7);
+    expect(resultFnExecuted).toBe(true);
   });
 
 
   it('loadAndInject', function () {
-    expect().toBe();
-    expect().toBe();
+    var Test;
+    inject(function (_Test_) {
+      Test = _Test_;
+    });
+
+    var resultFnExecuted = false;
+
+    scope.list = [{
+      idEntity: 7
+    }];
+
+    http.expectGET('/api/tests/list/byIds?ids=7').respond('[{ "id": 7 }]'); 
+    loadAndInject(scope.list, Test, 'entity', 'id', function () {
+      resultFnExecuted = true;
+    });
+    http.flush();
+
+    expect(scope.list[0].entity).toBeDefined();
+    expect(scope.list[0].entity.id).toBe(7);
+    expect(resultFnExecuted).toBe(true);
   });
 
 
@@ -91,11 +181,16 @@ describe('Backbone', function () {
       initializeSelect2(scope, 'results', null, 'person');
     });
 
-    it('basic', function () {
-      initializeSelect2(scope, 'results', null, 'person', {
-        bindId: true,
+   it('complex', function () {
+     scope.results = {};
+
+      initializeSelect2(scope, 'results.idContainer', null, 'person', {
+        bindId: 'Test',
         bindEntity: 'rewrite.to'
       });
+      scope.idContainer.value = { id: 7 };
+      scope.$digest();
+      expect(scope.results.idContainer).toBe(7);
     });
   });
 });
