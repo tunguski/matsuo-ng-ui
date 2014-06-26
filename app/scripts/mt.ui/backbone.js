@@ -214,6 +214,7 @@ function loadAndInject(elementsList, resourceService, elementName, idResultGette
  */
 function initializeSelect2($scope, path, url, formatPrefix, optionsExtensions) {
   optionsExtensions = optionsExtensions || {};
+  // first part of path
   var fieldName = path.split('.').slice(-1)[0];
   var obj = _.getOrCreate($scope, fieldName);
 
@@ -222,6 +223,7 @@ function initializeSelect2($scope, path, url, formatPrefix, optionsExtensions) {
     $scope.$watch(fieldName + '.value', function(n, o) {
       // infinite loop protection
       if (n && _.getByPath($scope, path) !== n.id) {
+        // id entity
         var value = (typeof n === 'object') && ('id' in n) ? n.id : null;
         if (n.$promise) {
           n.$promise.then(function() {
