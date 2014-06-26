@@ -28,7 +28,7 @@ angular.module('mt.ui')
             } else {
               return '';
             }
-          }}
+          };}
 
           scope.pdfHref = generateLink('pdf');
           scope.xlsHref = generateLink('xls');

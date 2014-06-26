@@ -57,7 +57,7 @@ angular.module('mt.ui')
 
             $dialog.messageBox('Błąd', msg, [{result:'OK', label: 'Zamknij', cssClass: 'btn-primary'}]);
           }
-        }
-      }
+        };
+      };
     });
 

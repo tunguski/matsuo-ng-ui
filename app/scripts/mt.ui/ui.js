@@ -20,11 +20,11 @@ angular.module('mt.ui', ['ui.bootstrap', 'ui.select2', 'mt.route', 'ngResource',
       };
     })
 
-    .filter('formatDate', function() { return function(input) { return parseDate(input).format('YYYY-MM-DD'); }})
-    .filter('formatTime', function() { return function(input) { return parseDate(input).format('HH:mm'); }})
-    .filter('formatDateTime', function() { return function(input) { return parseDate(input).format('YYYY-MM-DD HH:mm'); }})
-    .filter('formatDayMoment', function() { return function(input) { return parseDate(input).format('ddd HH:mm'); }})
-    .filter('weekdayLabel', function() { return function(input) { return parseDate(input).format('dddd'); }})
+    .filter('formatDate', function() { return function(input) { return parseDate(input).format('YYYY-MM-DD'); };})
+    .filter('formatTime', function() { return function(input) { return parseDate(input).format('HH:mm'); };})
+    .filter('formatDateTime', function() { return function(input) { return parseDate(input).format('YYYY-MM-DD HH:mm'); };})
+    .filter('formatDayMoment', function() { return function(input) { return parseDate(input).format('ddd HH:mm'); };})
+    .filter('weekdayLabel', function() { return function(input) { return parseDate(input).format('dddd'); };})
 
 
     .filter('addressPresenter', function() {
@@ -46,8 +46,8 @@ angular.module('mt.ui', ['ui.bootstrap', 'ui.select2', 'mt.route', 'ngResource',
           result = result + ' / ' + address.apartmentNumber;
         }
 
-        return result
-      }
+        return result;
+      };
     })
 
 
@@ -89,12 +89,16 @@ angular.module('mt.ui', ['ui.bootstrap', 'ui.select2', 'mt.route', 'ngResource',
           iframe.contentWindow.print();
           iframe.parentNode.removeChild(iframe);
         };
-        if (iframe.attachEvent) iframe.attachEvent('onload', iFrameLoaded); // for IE
-        else if(iframe.addEventListener) iframe.addEventListener('load', iFrameLoaded, false); // for most other browsers
-        else iframe.onload = iFrameLoaded; // just in case there's a browser not covered by the first two
+        if (iframe.attachEvent) { 
+          iframe.attachEvent('onload', iFrameLoaded); // for IE
+	} else if (iframe.addEventListener) {
+	  iframe.addEventListener('load', iFrameLoaded, false); // for most other browsers
+	} else {
+	  iframe.onload = iFrameLoaded; // just in case there's a browser not covered by the first two
+	}
 
         document.body.appendChild(iframe);
-      }
+      };
     })
 
 
@@ -241,11 +245,11 @@ function RemindPasswordDialogController($scope, $http, $modalInstance) {
     } else {
       $scope.errorClass = 'text-red';
     }
-  }
+  };
 
   $scope.close = function() {
     $modalInstance.close();
-  }
+  };
 }
 
 
@@ -260,12 +264,12 @@ function HeaderController($scope, $location, $dialog) {
     }
 
     $dialog.simpleDialog('help' + cleanPath() + 'Help.html', 'HelpDialogController')();
-  }
+  };
 }
 
 
 function HelpDialogController($scope, $modalInstance) {
-  $scope.close = function(result) { $modalInstance.close(result); }
+  $scope.close = function(result) { $modalInstance.close(result); };
 }
 
 /**

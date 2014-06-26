@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('mt.ui')
     .config(function($translateProvider) {
       // polish translation

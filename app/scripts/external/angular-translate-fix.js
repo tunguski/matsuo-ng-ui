@@ -1,3 +1,5 @@
+'use strict';
+
 /*!
  * angular-translate - v2.2.0 - 2014-06-26
  * http://github.com/PascalPrecht/angular-translate
@@ -291,7 +293,7 @@ angular.module('pascalprecht.translate').provider('$translate', [
           if (translationId) {
             translationId = translationId.trim();
           }
-          var promiseToWaitFor = function () {
+          var promiseToWaitFor = (function () {
               var promise = $preferredLanguage ? langPromises[$preferredLanguage] : langPromises[$uses];
               fallbackIndex = 0;
               if ($storageFactory && !promise) {
@@ -304,7 +306,7 @@ angular.module('pascalprecht.translate').provider('$translate', [
                 }
               }
               return promise;
-            }();
+            }());
           if (!promiseToWaitFor) {
             determineTranslation(translationId, interpolateParams, interpolationId).then(deferred.resolve, deferred.reject);
           } else {
@@ -825,7 +827,7 @@ angular.module('pascalprecht.translate').directive('translate', [
               $compile(iElement.contents())(scope);
             }
           };
-          var updateTranslationFn = function () {
+          var updateTranslationFn = (function () {
               if (!translateValuesExist && !translateValueExist) {
                 return function () {
                   var unwatch = scope.$watch('translationId', function (value) {
@@ -855,7 +857,7 @@ angular.module('pascalprecht.translate').directive('translate', [
                   scope.$watch('translationId', updateTranslations);
                 };
               }
-            }();
+            }());
           var unbind = $rootScope.$on('$translateChangeSuccess', updateTranslationFn);
           updateTranslationFn();
           scope.$on('$destroy', unbind);

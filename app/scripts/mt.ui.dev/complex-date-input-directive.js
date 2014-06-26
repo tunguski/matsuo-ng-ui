@@ -9,13 +9,13 @@ angular.module('mt.ui.dev')
         controller: function($scope) {
           $scope.choose = function (type) {
             $scope.complexDateType = type;
-          }
+          };
         },
         link: function ( scope, element, attrs) {
           scope.complexDate = { isOpen: false };
 
           var documentClickBind = function(event) {
-            if (scope.complexDate.isOpen && $(event.target).closest($(element[0])).length == 0) {
+            if (scope.complexDate.isOpen && $(event.target).closest($(element[0])).length === 0) {
               scope.$apply(function() {
                 scope.complexDate.isOpen = false;
                 $document.unbind('click', documentClickBind);

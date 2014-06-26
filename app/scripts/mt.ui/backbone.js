@@ -331,6 +331,11 @@ function initializeSelect2($scope, path, url, formatPrefix, optionsExtensions) {
   }
 
 
+  function loadEnum() {
+    throw 'loadEnum is not implemented properly';
+  }
+
+
   function initializeEnumSelect2($scope, $http, name, options) {
     options = options || {};
     initializeSelect2($scope, 'form.' + name, null, name, $.extend(true, {

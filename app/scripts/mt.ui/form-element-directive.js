@@ -22,7 +22,7 @@ angular.module('mt.ui')
               singleField: $scope.singleField,
               cssClasses: $scope.cssClasses
             };
-          }
+          };
         }
       };
     })
@@ -46,13 +46,13 @@ angular.module('mt.ui')
               params.cssClasses = (params.cssClasses ? params.cssClasses + ' ' : '') + scope.cssClasses;
             }
 
-            angular.forEach(_.filter(_.keys(iAttrs.$attr), function (key) { return key.indexOf('mtf') == 0; }),
+            angular.forEach(_.filter(_.keys(iAttrs.$attr), function (key) { return key.indexOf('mtf') === 0; }),
                 function (key) {
                   params[key] = iAttrs[key];
                 });
 
 
-            return "/api/bootstrap?" + _.toUrlParams(params);
+            return '/api/bootstrap?' + _.toUrlParams(params);
           };
 
         }

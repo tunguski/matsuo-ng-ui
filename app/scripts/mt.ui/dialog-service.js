@@ -4,10 +4,10 @@ angular.module('mt.ui')
     .factory('$dialog', ['$rootScope', '$modal', '$http', function($rootScope, $modal, $http) {
 
       function dialog(modalOptions, resultFn) {
-        var dialog = $modal.open(modalOptions);
-        if (resultFn) dialog.result.then(resultFn);
-        dialog.values = modalOptions;
-        return dialog;
+        var dialogInstance = $modal.open(modalOptions);
+        if (resultFn) { dialogInstance.result.then(resultFn); }
+        dialogInstance.values = modalOptions;
+        return dialogInstance;
       }
 
       function modalOptions(templateUrl, controller, scope) {
@@ -47,7 +47,7 @@ angular.module('mt.ui')
 
           scope.close = function(result) { modalInstance.close(result); };
 
-          function successFn(entity, headers) { modalInstance.close('OK'); };
+          function successFn(entity, headers) { modalInstance.close('OK'); }
 
           var entityName = opts.entityName || 'entity';
           var saveFn = opts.saveFn || successFn;
@@ -75,8 +75,8 @@ angular.module('mt.ui')
                   });
                 }
               });
-            }
-          }
+            };
+          };
         }
       };
 
@@ -89,6 +89,6 @@ angular.module('mt.ui')
           '<div class="modal-footer"><button ng-repeat="btn in buttons" ng-click="close(btn.result)" class="btn" ng-class="btn.cssClass" translate="btn.label"></button></div>\n');
     }])
     .controller('MessageBoxController', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
-      $scope.close = function (result) { $modalInstance.close(result); }
+      $scope.close = function (result) { $modalInstance.close(result); };
     }]);
 

@@ -20,7 +20,7 @@ angular.module('mt.ui')
         link: function (scope, iElement, iAttrs) {
           scope.clearQuery = function() {
             scope.query = '';
-          }
+          };
 
           scope.showSearchButton = iAttrs.search;
 

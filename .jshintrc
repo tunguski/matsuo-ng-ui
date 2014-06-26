@@ -22,6 +22,12 @@
     "angular": false,
     "_": false,
     "$": false,
-    "moment": false
+    "moment": false,
+    "parseDate": false,
+    "toastr": false,
+    "scopeSetter": false,
+    "buildRestFactory": false,
+    "log": false,
+    "saveOrUpdate": false
   }
 }
