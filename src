@@ -1,0 +1,1056 @@
+'use strict';
+
+function formatResult(printFn) {
+  return function (element) {
+    if (element) {
+      try {
+        return printFn(element);
+      } catch (e) {
+        return '' + element;
+      }
+    } else {
+      return '';
+    }
+  };
+}
+
+
+function formatResultByField(fieldName) {
+  return formatResult(function (element) {
+    return '' + element[fieldName];
+  });
+}
+
+
+// general party formating function
+var partyFormatResult = formatResult(function (party) {
+  if (party.firstName) {
+    return '' + party.firstName + ' ' + party.lastName;
+  } else if (party.fullName) {
+    return '' + party.fullName;
+  }
+});
+// person formating function
+var personFormatResult = formatResult(function (person) {
+  return '' + person.firstName + ' ' + person.lastName + (person.pesel ? ' ' + person.pesel : '');
+});
+// simpleParty search results formating function
+var simplePartyFormatResult = formatResultByField('name');
+
+
+// fixme: move to upper project
+function extractEventEndDate(element) {
+  if (element.endDate) {
+    return moment(element.endDate).toDate();
+  } else {
+    return moment(element.startDate).add('minutes', parseInt(element.duration)).toDate();
+  }
+}
+
+// =============================================================================
+// formatting
+// =============================================================================
+
+
+function parseDate(date) {
+  if (date) {
+    if (moment.isMoment(date)) {
+      return date;
+    } else if (moment(date).isValid()) {
+      return moment(date);
+    } else if (moment(date, 'HH:mm').isValid()) {
+      return moment(date, 'HH:mm');
+    } else if (moment(date, 'YYYY-MM-DD HH:mm').isValid()) {
+      return moment(date, 'YYYY-MM-DD HH:mm');
+    } else if (moment(date, 'YYYY-MM-DD').isValid()) {
+      return moment(date, 'YYYY-MM-DD');
+    }
+  }
+}
+
+
+//=============================================================================
+//messages and console logging
+//=============================================================================
+
+$(document).ready(function() {
+  $.ajaxSetup({ error: function (jqXHR, textStatus, errorThrown) {
+    log('xhr error: ' + textStatus + '; ' + errorThrown);
+  } });
+});
+
+function log(msg) {
+  if (window.console && console.log) {
+    console.log(msg);
+  } else {
+    $('#logBox').append(msg);
+  }
+}
+
+
+function err(msg) {
+  if (window.console && console.log) {
+    console.log(msg);
+    console.trace();
+//  } else {
+//    $('#logBox').append(msg);
+  }
+}
+
+function isBetween(date, from, to) {
+  var dateMoment = moment(date);
+  return dateMoment.isAfter(moment(from)) && dateMoment.isBefore(moment(to));
+}
+
+
+function scopeSetter(scope, propertyName) {
+  return function (data) { _.setByPath(scope, propertyName, data); }
+}
+
+
+function saveOrUpdate($scope, field, saveFn, updateFn) {
+  var validationFn = $scope.getService('validationService')($scope);
+
+  function successFn(invokeFn) {
+    return function (entity, headers) {
+      validationFn();
+      invokeFn(entity, headers);
+    }
+  }
+
+  return function() {
+    var entity = $scope[field];
+    return entity.isNew() ? entity.$save({}, successFn(saveFn), validationFn)
+        : entity.$update({}, successFn(updateFn), validationFn);
+  }
+}
+
+
+/**
+ * options
+ *        .listField - string: field to which result list will be put
+ *        .refreshMethod - string: scope param with function invoked at each 'query' text change
+ *        .queryField - string: scope field containing filter query
+ *        .minLength - int: minimum query chars to start ajax invocations
+ *        .afterLoadFn - function(elements): function invoked after loading query results
+ *
+ * Configure query function for simple-search directive
+ */
+function searchQueryFunction($scope, Resource, options) {
+  options = options || {};
+  var listField = options.listField || 'elements';
+  var refreshMethod = options.refreshMethod || 'refresh';
+  var queryField = options.queryField || 'query';
+
+  $scope[listField] = [];
+
+  $scope[refreshMethod] = function(n, o) {
+    if (options.minLength && (!n || n.length < options.minLength)) {
+      $scope[listField].length = 0;
+      return;
+    }
+
+    Resource.query({ query: $scope.query }, function(data) {
+      $scope[listField].length = 0;
+      $scope[listField].pushArray(data);
+
+      if (options.afterLoadFn) {
+        options.afterLoadFn(data);
+      }
+    });
+  }
+  $scope[refreshMethod]();
+
+  $scope.$watch(queryField, $scope[refreshMethod]);
+}
+
+
+function loadAndInjectInternal(elementsList, resourceService, elementGetter, elementName, idResultGetter, resultFn) {
+  var elementIds = {};
+
+  angular.forEach(elementsList, function(element) {
+
+    if (_.getByPath(element, elementGetter)) {
+      elementIds['' + _.getByPath(element, elementGetter)] = '';
+    }
+  });
+
+  if (!_.isEmpty(_.keys(elementIds))) {
+    resourceService.listByIds({ ids: _.keys(elementIds) }, function(data) {
+      angular.forEach(data, function(resultElement) {
+        angular.forEach(elementsList, function(element) {
+          if (_.getByPath(element, elementGetter) === resultElement[idResultGetter]) {
+            _.setByPath(element, elementName, resultElement);
+          }
+        });
+      });
+
+      if (resultFn) {
+        resultFn(data);
+      }
+    });
+  }
+}
+
+
+function loadAndInject(elementsList, resourceService, elementName, idResultGetter, resultFn) {
+  loadAndInjectInternal(elementsList, resourceService, 'id' + elementName.capitalize(),
+      elementName, idResultGetter, resultFn);
+};
+
+
+/**
+ * optionsExtensions
+ *                  .bindId - boolean, string:Resource
+ *                  .bindEntity - string:path, function
+ *                  .removeProperties - array[string]: attributes to remove from default config
+ *                  .definedElements - list of select's values (if set, ajax is disabled)
+ *                  .additionalQueryParams - additional ajax query static params
+ *
+ * Usual error in console:
+ *     'query function not defined for Select2 undefined'
+ * means that wrong references to select model in view are defined. It should look like this:
+ *     select2='[field].options'
+ *     ng-model='[field].value'
+ * If not, they are not consistent with configuration - initializeSelect2().
+ */
+function initializeSelect2($scope, path, url, formatPrefix, optionsExtensions) {
+  optionsExtensions = optionsExtensions || {};
+  var fieldName = path.split('.').slice(-1)[0];
+  var obj = _.getOrCreate($scope, fieldName);
+
+  // bindId - when select's value changed, rewrite object's id to field described by path int bindId attr
+  if (optionsExtensions.bindId) {
+    $scope.$watch(fieldName + '.value', function(n, o) {
+      // infinite loop protection
+      if (n && _.getByPath($scope, path) !== n.id) {
+        var value = (typeof n === 'object') && ('id' in n) ? n.id : null;
+        if (n.$promise) {
+          n.$promise.then(function() {
+            _.setByPath($scope, path, value);
+          });
+        } else {
+          _.setByPath($scope, path, value);
+        }
+      } else if (!n && o) {
+        _.setByPath($scope, path, null);
+      }
+    });
+
+    // If bindId value is string, it defines what Resource to use to load object by id. This way it's possible to
+    // set select's value after entity loading.
+    if (typeof optionsExtensions.bindId === 'string') {
+      $scope.$watch(path, function(n, o) {
+        // infinite loop protection
+        if (n && _.getByPath($scope, fieldName + '.value.id') !== n) {
+          var query = {};
+          query['id' + optionsExtensions.bindId] = _.getByPath($scope, path);
+          var instance = $scope.getService(optionsExtensions.bindId).get(query, function() {
+            _.setByPath($scope, fieldName + '.value', instance);
+          });
+        } else if (!n && o) {
+          _.setByPath($scope, fieldName + '.value', null);
+        }
+      });
+    }
+  }
+
+  // bindEntity - when select's value changed, automaticaly rewrite selected object (not id) to field described by
+  //              path in attribute bindEntity='path'
+  if (optionsExtensions.bindEntity) {
+    $scope.$watch(fieldName + '.value', function(n, o) {
+      // wartość przed i po jest pusta - nie wykonuje pustej operacji
+      if ((_.isUndefined(n) || n == null) && (_.isUndefined(o) || o == null)) {
+        return;
+      }
+
+      if (angular.isString(optionsExtensions.bindEntity)) {
+        _.setByPath($scope, optionsExtensions.bindEntity, n);
+      } else if (angular.isFunction(optionsExtensions.bindEntity)) {
+        optionsExtensions.bindEntity(n);
+      }
+    });
+  }
+
+  if (optionsExtensions.definedElements) {
+    if (_.isFunction(optionsExtensions.definedElements)) {
+      var fn = optionsExtensions.definedElements;
+      optionsExtensions.definedElements = [];
+      fn(optionsExtensions.definedElements);
+    }
+
+    optionsExtensions.minimumInputLength = 0;
+    optionsExtensions.query = function(query) { query.callback({ results: optionsExtensions.definedElements }); };
+    url = false;
+  }
+
+
+  obj.options = $.extend(true, {
+    minimumInputLength : 3,
+    // instead of writing the function to execute the request we use Select2's convenient helper
+    ajax : {
+      url: url,
+      dataType: 'json',
+      // FIXME: not working?
+      quietMillis: 500,
+      data: function(term, page) {
+        var params = {
+          query : term, // search term
+          page_limit : 100,
+          page: page
+        };
+
+        if (optionsExtensions.additionalQueryParams) {
+          $.extend(true, params, optionsExtensions.additionalQueryParams);
+        }
+
+        return params;
+      },
+      // parse the results into the format expected by Select2.
+      // since we are using custom formatting functions we do not need to alter remote JSON data
+      results : function(data, page) { return { results : data }; }
+    },
+    // omitted for brevity, see the source of this page
+    formatResult : formatPrefix ? eval(formatPrefix + 'FormatResult') : null,
+    // omitted for brevity, see the source of this page
+    formatSelection : formatPrefix ? eval(formatPrefix + 'FormatResult') : null,
+    // apply css that makes the dropdown taller
+    dropdownCssClass : 'bigdrop',
+    // we do not want to escape markup since we are displaying html in results
+    escapeMarkup : function(m) { return m; }
+  }, optionsExtensions);
+
+  if (!url) {
+    delete obj.options.ajax;
+  }
+
+  if (optionsExtensions && optionsExtensions.removeProperties) {
+    $.forEach(optionsExtensions.removeProperties, function(element) {
+      delete obj.options[element];
+    });
+  }
+
+
+  function initializeEnumSelect2($scope, $http, name, options) {
+    options = options || {};
+    initializeSelect2($scope, 'form.' + name, null, name, $.extend(true, {
+      minimumInputLength: 0,
+      bindId: true,
+      definedElements: loadEnum($http, name + 'Enum')
+    }, options));
+  }
+}
+
+
+'use strict';
+
+angular.module('mt.ui')
+    .directive('hr', function factory() {
+      return {
+        restrict: 'A',
+        replace: true,
+        template: '<div class="row-fluid">' +
+                    '<div class="span12">' +
+                      '<hr />' +
+                    '</div>' +
+                  '</div>'
+      };
+    })
+    .directive('h4', function factory() {
+      return {
+        restrict: 'A',
+        transclude: true,
+        replace: true,
+        template: '<div class="row-fluid">' +
+                    '<div class="span12">' +
+                      '<h4 ng-transclude></h4>' +
+                    '</div>' +
+                  '</div>'
+      };
+    })
+    .directive('h5', function factory() {
+      return {
+        restrict: 'A',
+        transclude: true,
+        replace: true,
+        template: '<div class="row-fluid">' +
+                    '<div class="span12">' +
+                      '<h5 ng-transclude></h5>' +
+                    '</div>' +
+                  '</div>'
+      };
+    })
+;
+'use strict';
+
+angular.module('mt.ui')
+    .factory('$dialog', ['$rootScope', '$modal', '$http', function($rootScope, $modal, $http) {
+
+      function dialog(modalOptions, resultFn) {
+        var dialog = $modal.open(modalOptions);
+        if (resultFn) dialog.result.then(resultFn);
+        dialog.values = modalOptions;
+        return dialog;
+      }
+
+      function modalOptions(templateUrl, controller, scope) {
+        return { templateUrl:  templateUrl, controller: controller, scope: scope }; }
+
+      var dialogProvider = {
+        /**
+         * Creates and opens dialog.
+         */
+        dialog: dialog,
+
+        /**
+         * Returns 0-parameter function that opens dialog on evaluation.
+         */
+        simpleDialog: function(templateUrl, controller, resultFn) {
+          return function () { return dialog(modalOptions(templateUrl, controller), resultFn); };
+        },
+
+        /**
+         * Opens simple generic dialog presenting title, message (any html) and provided buttons.
+         */
+        messageBox: function(title, message, buttons, resultFn) {
+          var scope = angular.extend($rootScope.$new(false), { title: title, message: message, buttons: buttons });
+          return dialog(modalOptions('template/messageBox/message.html', 'MessageBoxController', scope),
+              function (result) {
+                var value = resultFn ? resultFn(result) : undefined;
+                scope.$destroy();
+                return value;
+              });
+        },
+
+        /**
+         * Configures save and cancel functions on passed scope.
+         */
+        saveAndCancelFn: function(scope, modalInstance, opts) {
+          opts = opts || {};
+
+          scope.close = function(result) { modalInstance.close(result); };
+
+          function successFn(entity, headers) { modalInstance.close('OK'); };
+
+          var entityName = opts.entityName || 'entity';
+          var saveFn = opts.saveFn || successFn;
+          var updateFn = opts.updateFn || successFn;
+
+          scope.save = saveOrUpdate(scope, entityName, saveFn, updateFn);
+        },
+
+        /**
+         * Creates change status confirmation dialog with simple generic AJAX function invoked when confirmed.
+         */
+        changeStatusConfirmationFn: function(scope, entityPartUrl, opts) {
+          opts = opts || {};
+          return function (fnType) {
+            return function(entity) {
+              var title = 'dialog.statusChange.confirm';
+              var msg = '<span><span translate="dialog.statusChange.successText"></span><b translate="{{ entityPartUrl + \'.changeStatus.\' + fnType }}"></b></span>';
+              var btns = [{result:'CANCEL', label: 'Cancel'}, {result:'OK', label: 'OK', cssClass: 'btn-primary'}];
+
+              return dialogProvider.messageBox(title, msg, btns, function(result) {
+                if (result === 'OK') {
+                  $http.post('/api/' + entityPartUrl + '/' + entity.id + '/' + fnType).success(function(data) {
+                    entity[opts.statusField || 'status'] = data.replace(/'/g, '');
+                    toastr.success(scope.translate('dialogService.changeStatus.success'));
+                  });
+                }
+              });
+            }
+          }
+        }
+      };
+
+      return dialogProvider;
+    }])
+    .run(['$templateCache', function($templateCache) {
+      $templateCache.put('template/messageBox/message.html',
+          '<div class="modal-header"><h3 translate="title"></h3></div>\n' +
+          '<div class="modal-body"><p ng-bind-html="message"></p></div>\n' +
+          '<div class="modal-footer"><button ng-repeat="btn in buttons" ng-click="close(btn.result)" class="btn" ng-class="btn.cssClass" translate="btn.label"></button></div>\n');
+    }])
+    .controller('MessageBoxController', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+      $scope.close = function (result) { $modalInstance.close(result); }
+    }]);
+
+
+'use strict';
+
+angular.module('mt.ui')
+    .directive('downloadButton', function factory() {
+      return {
+        replace: true,
+        scope: {
+          model: '=downloadButton',
+          fileName: '@fileName'
+        },
+        template: '<div class="btn-group">' +
+            '<a class="btn btn-info" class="btn btn-info" ng-href="{{pdfHref()}}" target="_blank" translate="form.download.pdf"></a>' +
+            '<button class="btn btn-info dropdown-toggle" data-toggle="dropdown">' +
+            '<span class="caret"></span>' +
+            '</button>' +
+            '<ul class="dropdown-menu">' +
+            '<li><a tabindex="-1" ng-click="printFile(pdfHref())" translate="form.print"></a></li>' +
+            // xls version only for reports
+            '<li><a tabindex="-1" ng-show="fileName" ng-href="{{xlsHref()}}" target="_blank" translate>form.download.xls</a></li>' +
+            '<li><a tabindex="-1" translate>form.send.email</a></li>' +
+            '</ul>' +
+            '</div>',
+        link: function (scope, iElement, iAttrs) {
+          function generateLink(type) { return function () {
+            if (scope.model) {
+              return scope.fileName ? '/api/reports/' + type + '/' + scope.fileName + '?' + _.toUrlParams(scope.model)
+                  : '/api/prints/' + scope.model.id;
+            } else {
+              return '';
+            }
+          }}
+
+          scope.pdfHref = generateLink('pdf');
+          scope.xlsHref = generateLink('xls');
+        }
+      };
+    });
+
+'use strict';
+
+angular.module('mt.ui')
+    .directive('mtFocusModel', function($timeout) {
+      return {
+        link: function ( scope, element, attrs ) {
+          scope.$watch( attrs.mtFocusModel, function ( val ) {
+//            log(attrs.mtFocusModel + ' : ' + val);
+            if ( angular.isDefined( val ) && val ) {
+              $timeout( function () {
+                if (element.data('select2')) {
+//                  log('elem select: ' + element);
+                  element.select2('focus');
+                } else {
+//                  log('elem other: ' + element);
+                  element.focus();
+                }
+              });
+            }
+          }, true);
+
+          element.bind('blur', function () {
+            attrs.mtFocusModel = false;
+            if ( angular.isDefined( attrs.mtFocusLost ) ) {
+              scope.$apply( attrs.mtFocusLost );
+
+            }
+          });
+        }
+      };
+    });
+'use strict';
+
+angular.module('mt.ui')
+    .directive('mtFormPart', function () {
+      return {
+        replace: true,
+        transclude: true,
+        template: '<div ng-transclude></div>',
+        scope: {
+          entityClass: '@mtFormPart',
+          entityName: '@mtEntityName',
+          inline: '@mtInline',
+          singleField: '@mtSingleField',
+          cssClasses: '@mtCssClasses'
+        },
+        controller: function ($scope) {
+          this.baseParams = function () {
+            return {
+              entityClass: $scope.entityClass,
+              entityName: $scope.entityName,
+              inline: $scope.inline,
+              singleField: $scope.singleField,
+              cssClasses: $scope.cssClasses
+            };
+          }
+        }
+      };
+    })
+
+    .directive('mtFormField', function () {
+      return {
+        require: '^mtFormPart',
+        replace: true,
+        template: '<ng-include src="fieldUrl()" />',
+        scope: {
+          fieldName: '@mtFormField',
+          htmlName: '@mtHtmlName',
+          cssClasses: '@mtCssClasses'
+        },
+        link: function (scope, iElement, iAttrs, ctrl) {
+          scope.fieldUrl = function () {
+            var params = ctrl.baseParams();
+            params.fieldName = scope.fieldName;
+            params.htmlName = scope.htmlName;
+            if (scope.cssClasses) {
+              params.cssClasses = (params.cssClasses ? params.cssClasses + ' ' : '') + scope.cssClasses;
+            }
+
+            angular.forEach(_.filter(_.keys(iAttrs.$attr), function (key) { return key.indexOf('mtf') == 0; }),
+                function (key) {
+                  params[key] = iAttrs[key];
+                });
+
+
+            return "/api/bootstrap?" + _.toUrlParams(params);
+          };
+
+        }
+      };
+    })
+;
+'use strict';
+
+angular.module('mt.ui')
+    .directive('infoTable', [ function() {
+      return {
+        replace: false,
+        restrict: 'EA',
+        link: function ( scope, element, attrs ) {
+          element.addClass('table table-condensed details-table');
+        }
+      };
+    }])
+    .directive('row', [ function() {
+      return {
+        replace: false,
+        restrict: 'EA',
+        scope: {
+          first: '=',
+          second: '=',
+          third: '='
+        },
+        templateUrl: 'template/infoTable/tableRow.html',
+        link: function ( scope, element, attrs ) {
+        }
+      };
+    }])
+    .run(['$templateCache', function($templateCache) {
+      $templateCache.put('template/infoTable/tableRow.html',
+          '<td ng-bind-html="first"></td><td ng-bind-html="second"></td><td ng-if="third"  ng-bind-html="third"></td>');
+    }])
+;
+
+
+'use strict';
+
+/**
+ * Permissions service for UI. It shows/hides parts of view. It does not force security, only visibility. Data
+ * security needs to be forced on server side.
+ */
+angular.module('mt.ui')
+    .factory('permissionService', function($rootScope, $http, $q) {
+      var permissionService = {
+        checkedPermissions: {},
+
+        isPermitted: function (permissionString) {
+          var deferred = $q.defer();
+
+          if (permissionString in permissionService.checkedPermissions) {
+            deferred.resolve(permissionService.checkedPermissions[permissionString]);
+          } else {
+            permissionService.lookupPermissions([ permissionString ]).success(function (data) {
+              deferred.resolve(permissionService.checkedPermissions[permissionString]);
+            });
+          }
+
+          return deferred.promise;
+        },
+
+        lookupPermissions: function (permissionsStrings) {
+          return $http.post('/api/login/permissions', permissionsStrings).success(function (data) {
+            angular.forEach(permissionsStrings, function (element, index) {
+              permissionService.checkedPermissions[element] = data[index];
+            });
+          });
+        },
+
+        reloadPermissions: function () {
+          permissionService.lookupPermissions(_.keys(permissionService.checkedPermissions));
+        }
+      };
+
+      $rootScope.$on('loggedIn', permissionService.reloadPermissions);
+
+      return permissionService;
+    }
+);
+
+
+'use strict';
+
+angular.module('mt.ui')
+    .directive('simpleSearch', function factory() {
+      return {
+        replace: true,
+        transclude: true,
+        scope: {
+          query: '=query',
+          searchFn: '&?search'
+        },
+        template: '<form class="form-inline">' +
+                    '<div class="input-append">' +
+                      '<input type="text" name="query" ng-model="query" class="input-medium">' +
+                      '<button type="button" ng-click="clearQuery()" class="btn btn-small"><i class="icon-remove"></i></button>' +
+                      '<button type="button" ng-if="showSearchButton" ng-click="searchFn({query: query})" class="btn btn-small" translate="form.search"></button>' +
+                    '</div>' +
+                    '<span ng-transclude></span>' +
+                  '</form>',
+        link: function (scope, iElement, iAttrs) {
+          scope.clearQuery = function() {
+            scope.query = '';
+          }
+
+          scope.showSearchButton = iAttrs.search;
+
+          if (iAttrs.placeholder) {
+            // form -> div -> input
+            iElement.find('input').attr('placeholder', iAttrs.placeholder);
+          }
+        }
+      };
+    });
+'use strict';
+
+angular.module('mt.ui', ['ui.bootstrap', 'ui.select2', 'mt.route', 'ngResource', 'pascalprecht.translate'])
+    .config(function($routeProvider, $httpProvider, $sceProvider) {
+      // Completely disable SCE.  For demonstration purposes only!
+      // Do not use in new projects.
+      $sceProvider.enabled(false);
+
+      $httpProvider.defaults.useXDomain = true;
+      $httpProvider.defaults.withCredentials = true;
+    })
+
+
+    .run(function ($rootScope, $injector) {
+      $rootScope.getService = function (name) {
+        return $injector.get(name);
+      };
+      $rootScope.hasService = function (name) {
+        return $injector.has(name);
+      };
+    })
+
+    .filter('formatDate', function() { return function(input) { return parseDate(input).format('YYYY-MM-DD'); }})
+    .filter('formatTime', function() { return function(input) { return parseDate(input).format('HH:mm'); }})
+    .filter('formatDateTime', function() { return function(input) { return parseDate(input).format('YYYY-MM-DD HH:mm'); }})
+    .filter('formatDayMoment', function() { return function(input) { return parseDate(input).format('ddd HH:mm'); }})
+    .filter('weekdayLabel', function() { return function(input) { return parseDate(input).format('dddd'); }})
+
+
+    .filter('addressPresenter', function() {
+      return function (address) {
+        if (!address) {
+          return;
+        }
+        var result = '';
+
+        if (address.zipCode) {
+          result = result + address.zipCode + ' ';
+        }
+        result = result + address.town + '<br/>';
+        result = result + address.street;
+        if (address.houseNumber) {
+          result = result + ' ' + address.houseNumber;
+        }
+        if (address.apartmentNumber) {
+          result = result + ' / ' + address.apartmentNumber;
+        }
+
+        return result
+      }
+    })
+
+
+    .run(function ($rootScope, $http, $compile, $timeout, $location) {
+      // set page title
+      $rootScope.setTitle = function(title, scope) {
+        if (scope) {
+          // assignment does not work if it changes another compiled part
+          $rootScope.title = '';
+          $timeout(function() {
+            $rootScope.title = $compile(title)(scope).get();
+          });
+        } else {
+          $rootScope.title = title;
+        }
+      };
+
+      // default date configuration
+      $rootScope.dateOptions = {
+        appendToBody: true//,
+        //dateFormat: 'yy-mm-dd'
+      };
+
+      /**
+       * Actual year value.
+       */
+      $rootScope.actualYear = moment().format('YYYY');
+
+      /**
+       * Printing file. Appends iframe with url to file.
+       */
+      $rootScope.printFile = function printFile(urlOfFile) {
+        var path = $location.protocol() + '://' + $location.host() + ':' + $location.port() + urlOfFile;
+        // print
+        var iframe = document.createElement('iframe');
+        iframe.src = path;
+        iframe.style.display = 'none';
+        var iFrameLoaded = function() {
+          iframe.contentWindow.print();
+          iframe.parentNode.removeChild(iframe);
+        };
+        if (iframe.attachEvent) iframe.attachEvent('onload', iFrameLoaded); // for IE
+        else if(iframe.addEventListener) iframe.addEventListener('load', iFrameLoaded, false); // for most other browsers
+        else iframe.onload = iFrameLoaded; // just in case there's a browser not covered by the first two
+
+        document.body.appendChild(iframe);
+      }
+    })
+
+
+    // translation configuration
+
+    .config(function ($translateProvider) {
+      // tell angular-translate to use your custom handler
+      $translateProvider.useMissingTranslationHandler('mtTranslateHandlerFactory');
+    })
+
+    .run(function ($rootScope, $translate) {
+      // provide $translate service to all scopes
+      $rootScope.translate = $translate.instant;
+    })
+
+  // define custom handler
+    .factory('mtTranslateHandlerFactory', function ($translate) {
+      // has to return a function which gets a tranlation ID
+      return function (translationID) {
+        if (translationID.lastIndexOf('.') > 0) {
+          var translation = $translate.instant(translationID.substr(translationID.lastIndexOf('.') + 1));
+          return _.endsWith(translationID, translation) ? translationID : translation;
+        } else {
+          return translationID;
+        }
+      };
+    })
+;
+
+function baseAppController($scope, $route, $rootScope, $location, $timeout, $dialog, userGroupConfiguration, Login) {
+  $scope.loginData = {};
+
+
+  if ($rootScope.user) {
+    userGroupConfiguration.refreshAppUserConfiguration();
+  }
+
+  $rootScope.$on('loggedIn', userGroupConfiguration.refreshAppUserConfiguration);
+
+
+  $scope.afterLogged = function (data) {
+    Login.getUser(scopeSetter($rootScope, 'user')).$promise.then(function (user) {
+      $scope.loginData = {};
+      $scope.errorClass = '';
+      $rootScope.loggedIn = !!data;
+      $scope.showWrongPasswordMessage = false;
+
+      $rootScope.$broadcast('loggedIn');
+      $route.reload();
+      $location.url('');
+    });
+  };
+
+
+  $scope.isLoggedIn = function () {
+    return $rootScope.loggedIn === true;
+  };
+
+
+  $scope.isLoggedOff = function () {
+    return $rootScope.loggedIn === false;
+  };
+
+
+  $scope.checkIsLogged = function () {
+    Login.get(function(data) {
+      if (data && !$rootScope.loggedIn) {
+        $scope.afterLogged(data);
+      } else if (!data) {
+        $rootScope.loggedIn = false;
+      }
+    });
+  };
+  $scope.checkIsLogged();
+
+
+  $scope.login = function() {
+    Login.login($scope.loginData,
+        function(data) {
+          $scope.afterLogged(data);
+          toastr.success($scope.translate('login.success'));
+        },
+        function () {
+          $scope.errorClass = 'text-red';
+          $scope.showWrongPasswordMessage = true;
+        });
+  };
+
+  $scope.hideWrongPasswordMessage = function () {
+    $scope.showWrongPasswordMessage = false;
+  };
+
+
+  $scope.logoff = function() {
+    Login.logoff(function () {
+      $rootScope.loggedIn = false;
+    });
+  };
+
+  $scope.remindPassword = function() {
+    $dialog.simpleDialog('/views/login/remindPasswordModal.html', 'RemindPasswordDialogController')();
+  };
+
+  $timeout(function() {
+    $('.hidden-on-startup').removeClass('hidden-on-startup');
+  }, 200);
+}
+
+
+// default resource factory building function
+var restFactory = buildRestFactory(angular.module('mt.ui'));
+
+
+restFactory('Login', {
+  urlEntityName: 'login',
+  additionalFunctions: {
+    getUser: { url: '/user' },
+    logoff: { url: '/logoff', method: 'POST' },
+    login: {
+      method: 'POST'
+    }
+  }
+});
+
+
+function AppController($scope, $route, $rootScope, $location, $timeout, $dialog, userGroupConfiguration, Login) {
+  baseAppController($scope, $route, $rootScope, $location, $timeout, $dialog, userGroupConfiguration, Login);
+}
+
+function MenuController($scope, permissionService) {
+}
+
+
+function RemindPasswordDialogController($scope, $http, $modalInstance) {
+  $scope.remind = {};
+
+  $scope.remindPassword = function() {
+    if ($scope.remind.username) {
+      $http.post('/api/login/remindPassword/' + $scope.remind.username)
+          .success(function () {
+            toastr.success('Przesłano email z linkiem zmiany hasła');
+            $modalInstance.close();
+          });
+    } else {
+      $scope.errorClass = 'text-red';
+    }
+  }
+
+  $scope.close = function() {
+    $modalInstance.close();
+  }
+}
+
+
+function HeaderController($scope, $location, $dialog) {
+
+  $scope.showHelp = function() {
+    log('Show help for: ' + $location.path());
+
+    function cleanPath() {
+      return _.reduce($location.path().split('/'), function (memo, element) {
+        return memo + (parseInt(element) ? '' : '/' + element); }, '').substr(1);
+    }
+
+    $dialog.simpleDialog('help' + cleanPath() + 'Help.html', 'HelpDialogController')();
+  }
+}
+
+
+function HelpDialogController($scope, $modalInstance) {
+  $scope.close = function(result) { $modalInstance.close(result); }
+}
+
+/**
+ * For unstable directives.
+ */
+angular.module('mt.ui.dev', ['mt.ui']);
+'use strict';
+
+/**
+ * Displaying validation errors in forms.
+ * Wyświetlanie błędów walidacji na ekranach.
+ */
+angular.module('mt.ui')
+    .factory('validationService', function($dialog) {
+
+
+      /**
+       * Clear validation errors.
+       */
+      function clearValidationErrors($scope, formName) {
+        var form = $scope[formName];
+        for (var fieldName in form) {
+          if (typeof form[fieldName].serverError === 'string') {
+            delete form[fieldName].serverError;
+          }
+        }
+      }
+
+
+      return function ($scope, formName, entityName) {
+        return function(errorResponse) {
+          errorResponse = errorResponse || { data: {} };
+
+          formName = formName || 'form';
+          entityName = entityName || 'entity';
+          var entity = $scope[entityName];
+
+          var json = errorResponse.data || errorResponse;
+          // ??? WTF ???
+          while (_.isString(json)) {
+            json = JSON.parse(json);
+          }
+
+          clearValidationErrors($scope, formName);
+
+          // process field errors
+          if (json.fieldErrors) {
+            $.each(json.fieldErrors, function(key, value) {
+              var validationField = _.getOrCreate($scope, formName + '.' + (entityName + '.' + key).replace(/\./g, '_'));
+              validationField.serverError = $scope.translate('validation.error.' + value);
+            });
+          }
+
+          // process global errors
+          if (json.globalErrors && json.globalErrors.length > 0) {
+            var msg = '<ul>';
+
+            angular.forEach(json.globalErrors, function (error) {
+              msg = msg + '<li><b>' + $scope.translate('validation.error.' + error) + '</b></li>';
+            });
+
+            msg = msg + '</ul>';
+
+            $dialog.messageBox('Błąd', msg, [{result:'OK', label: 'Zamknij', cssClass: 'btn-primary'}]);
+          }
+        }
+      }
+    });
+

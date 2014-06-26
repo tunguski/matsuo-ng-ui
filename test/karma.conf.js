@@ -28,7 +28,7 @@ module.exports = function(config) {
       'bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
       'bower_components/angular-ui-select2/src/select2.js',
       //'bower_components/angular-translate/angular-translate.js',
-      'app/js/external/angular-translate-fix.js',
+      'app/scripts/external/angular-translate-fix.js',
 
       'bower_components/matsuo-js-util/matsuo-js-util.js',
       'bower_components/matsuo-ng-resource/matsuo-ng-resource.js',
@@ -36,12 +36,12 @@ module.exports = function(config) {
 
       'bower_components/angular-mocks/angular-mocks.js',
 
-      'app/js/mt.ui/ui.js',
-      'app/js/**/*.js',
+      'app/scripts/mt.ui/ui.js',
+      'app/scripts/**/*.js',
 
       // tests
-      'test/js/lib/*.js',
-      'test/js/unit/*.js'
+      'test/scripts/lib/*.js',
+      'test/scripts/unit/*.js'
     ],
 
     exclude: [],
@@ -50,7 +50,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      "app/js/mt.ui/*.js": "coverage"
+      "app/scripts/mt.ui/*.js": "coverage"
     },
 
 

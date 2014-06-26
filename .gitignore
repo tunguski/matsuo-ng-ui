@@ -13,6 +13,8 @@ lib-cov
 pids
 logs
 results
+.tmp
+dist
 
 node_modules
 bower_components
