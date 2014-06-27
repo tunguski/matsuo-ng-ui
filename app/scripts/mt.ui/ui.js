@@ -138,7 +138,6 @@ angular.module('mt.ui', ['ui.bootstrap', 'ui.select2', 'mt.route', 'mt.resource'
         }
       });
     })
-		    
 ;
 
 function baseAppController($scope, $route, $rootScope, $location, $timeout, $dialog, userGroupConfiguration, Login) {
