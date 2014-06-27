@@ -7,8 +7,6 @@ toastr = {
   }
 };
 
-restFactory('Test');
-
 angular.module('mt.route')
     .config(function (mtRouteConfig) {
       mtRouteConfig.rootPath = 'testViews';
@@ -51,6 +49,9 @@ angular.module('test.translate', ['mt.ui'])
     }])
     .controller('TestSimpleDialogController', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
     }])
+    .config(function (restFactoryProvider) {
+      restFactoryProvider.define('Test');
+    })
 ;
 beforeEach(module('test.translate'));
 

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('mt.ui', ['ui.bootstrap', 'ui.select2', 'mt.route', 'ngResource', 'pascalprecht.translate'])
+angular.module('mt.ui', ['ui.bootstrap', 'ui.select2', 'mt.route', 'mt.resource', 'pascalprecht.translate'])
     .config(function($routeProvider, $httpProvider, $sceProvider) {
       // Completely disable SCE.  For demonstration purposes only!
       // Do not use in new projects.
@@ -126,6 +126,19 @@ angular.module('mt.ui', ['ui.bootstrap', 'ui.select2', 'mt.route', 'ngResource',
         }
       };
     })
+    .config(function (restFactoryProvider) {
+      restFactoryProvider.define('Login', {
+        urlEntityName: 'login',
+        additionalFunctions: {
+          getUser: { url: '/user' },
+          logoff: { url: '/logoff', method: 'POST' },
+          login: {
+            method: 'POST'
+          }
+        }
+      });
+    })
+		    
 ;
 
 function baseAppController($scope, $route, $rootScope, $location, $timeout, $dialog, userGroupConfiguration, Login) {
@@ -206,23 +219,6 @@ function baseAppController($scope, $route, $rootScope, $location, $timeout, $dia
     $('.hidden-on-startup').removeClass('hidden-on-startup');
   }, 200);
 }
-
-
-// default resource factory building function
-var restFactory = buildRestFactory(angular.module('mt.ui'));
-
-
-restFactory('Login', {
-  urlEntityName: 'login',
-  additionalFunctions: {
-    getUser: { url: '/user' },
-    logoff: { url: '/logoff', method: 'POST' },
-    login: {
-      method: 'POST'
-    }
-  }
-});
-
 
 function AppController($scope, $route, $rootScope, $location, $timeout, $dialog, userGroupConfiguration, Login) {
   baseAppController($scope, $route, $rootScope, $location, $timeout, $dialog, userGroupConfiguration, Login);
