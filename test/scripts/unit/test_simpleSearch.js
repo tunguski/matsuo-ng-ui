@@ -7,7 +7,7 @@ describe('Simple search', function () {
     var templateAsHtml = template.html();
     expect(templateAsHtml).toBe('<form class="form-inline ng-isolate-scope ng-pristine ng-valid" simple-search="" placeholder="test">' +
         '<div class="input-append"><input type="text" name="query" ng-model="query" class="input-medium ng-pristine ng-valid" placeholder="test">' +
-        '<button type="button" ng-click="clearQuery()" class="btn btn-small"><i class="icon-remove"></i></button>' +
+        '<button type="button" ng-click="clearQuery()" class="btn btn-small"><i class="fa fa-times"></i></button>' +
         '<!-- ngIf: showSearchButton --></div><span ng-transclude=""></span></form>');
   });
 
