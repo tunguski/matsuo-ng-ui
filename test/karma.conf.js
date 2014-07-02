@@ -41,7 +41,8 @@ module.exports = function(config) {
 
       // tests
       'test/scripts/lib/*.js',
-      'test/scripts/unit/*.js'
+      'test/scripts/spec/*.js',
+      'test/scripts/spec/**/*.js'
     ],
 
     exclude: [],

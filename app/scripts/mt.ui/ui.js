@@ -223,9 +223,6 @@ function AppController($scope, $route, $rootScope, $location, $timeout, $dialog,
   baseAppController($scope, $route, $rootScope, $location, $timeout, $dialog, userGroupConfiguration, Login);
 }
 
-function MenuController($scope, permissionService) {
-}
-
 
 function RemindPasswordDialogController($scope, $http, $modalInstance) {
   $scope.remind = {};

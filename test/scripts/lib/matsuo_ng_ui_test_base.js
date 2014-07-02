@@ -26,7 +26,7 @@ angular.module('mt.route')
         return userGroupConfiguration;
       }]);
 
-angular.module('test.translate', ['mt.ui'])
+angular.module('test.module', ['mt.ui'])
     .config(function($translateProvider) {
       // ustawiamy globalnie locale
       $translateProvider.preferredLanguage('pl');
@@ -53,7 +53,7 @@ angular.module('test.translate', ['mt.ui'])
       restFactoryProvider.define('Test');
     })
 ;
-beforeEach(module('test.translate'));
+beforeEach(module('test.module'));
 
 
 beforeEach(function () {
