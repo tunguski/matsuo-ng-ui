@@ -6,9 +6,9 @@ describe('Simple search', function () {
     scope.$digest();
     var templateAsHtml = template.html();
     expect(templateAsHtml).toBe('<form class="form-inline ng-isolate-scope ng-pristine ng-valid" simple-search="" placeholder="test">' +
-        '<div class="input-append"><input type="text" name="query" ng-model="query" class="input-medium ng-pristine ng-valid" placeholder="test">' +
-        '<button type="button" ng-click="clearQuery()" class="btn btn-small"><i class="fa fa-times"></i></button>' +
-        '<!-- ngIf: showSearchButton --></div><span ng-transclude=""></span></form>');
+        '<div class="input-group"><input type="text" name="query" ng-model="query" class="form-control ng-pristine ng-valid" placeholder="test">' +
+        '<div class="input-group-btn"><button type="button" ng-click="clearQuery()" class="btn btn-default"><i class="fa fa-times"></i></button>' +
+        '<!-- ngIf: showSearchButton --></div></div><span ng-transclude=""></span></form>');
   });
 
 
@@ -18,7 +18,7 @@ describe('Simple search', function () {
     var template = compile('<div><div simple-search query="query" placeholder="test" /></div>')(scope);
     scope.$digest();
 
-    template.find('input + button').click();
+    template.find('button').click();
     scope.$digest();
 
     expect(scope.query).toBe('');

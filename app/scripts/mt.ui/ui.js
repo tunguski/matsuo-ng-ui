@@ -79,7 +79,7 @@ angular.module('mt.ui', ['ui.bootstrap', 'ui.select2', 'mt.route', 'mt.resource'
       /**
        * Printing file. Appends iframe with url to file.
        */
-      $rootScope.printFile = function printFile(urlOfFile) {
+      $rootScope.printFile = function (urlOfFile) {
         var path = $location.protocol() + '://' + $location.host() + ':' + $location.port() + urlOfFile;
         // print
         var iframe = document.createElement('iframe');
