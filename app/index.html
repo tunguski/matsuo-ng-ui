@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html ng-app="mt.ui">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(app/../) styles/vendor.css -->
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
+
+    <!-- endbuild -->
+
+    <title ng-bind-html="title">Matsuo-Core App</title>
+  </head>
+
+  <header>
+    <div class="container">
+      <h1>Matsuo Angular UI test page</h1>
+      <p class="description">Visualize components</p>
+    </div>
+  </header>
+
+  <body ng-controller="TestDataCtrl">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <legend>Info table</legend>
+          <table info-table>
+            <thead>
+            <tr>
+              <th>Property</th>
+              <th>Value</th>
+            </tr>
+            </thead>
+
+            <tr row first="'Surname:'" second="infoData.lastName"/>
+            <tr row first="'Name:'" second="infoData.firstName"/>
+            <tr row first="'Address:'" second="infoData.address | addressPresenter"/>
+          </table>
+        </div>
+
+        <div class="col-md-12">
+          <legend>Simple search</legend>
+          <div simple-search></div>
+	      </div>
+	    </div>
+    </div>
+
+    <!-- build:js(app/../) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <!-- endbower -->
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-touch/angular-touch.js"></script>
+    <script src="../bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js"></script>
+    <script src="bower_components/angular-translate/angular-translate.js"></script>
+    <script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="../bower_components/angular-ui-select2/src/select2.js"></script>
+
+    <script src="bower_components/moment/moment.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="../bower_components/select2/select2.js"></script>
+
+    <script src="bower_components/matsuo-js-util/matsuo-js-util.js"></script>
+    <script src="bower_components/matsuo-ng-route/matsuo-ng-route.js"></script>
+    <script src="bower_components/matsuo-ng-resource/matsuo-ng-resource.js"></script>
+
+    <!-- endbuild -->
+
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/mt.ui/ui.js"></script>
+    <script src="scripts/mt.ui/backbone.js"></script>
+
+    <script src="scripts/mt.ui/services/validation.js"></script>
+    <script src="scripts/mt.ui/services/permissions.js"></script>
+    <script src="scripts/mt.ui/services/dialog.js"></script>
+
+    <script src="scripts/mt.ui/directives/basic-format-elements.js"></script>
+    <script src="scripts/mt.ui/directives/download-button.js"></script>
+    <script src="scripts/mt.ui/directives/focus.js"></script>
+    <script src="scripts/mt.ui/directives/form-element.js"></script>
+    <script src="scripts/mt.ui/directives/info-table.js"></script>
+    <script src="scripts/mt.ui/directives/simple-search.js"></script>
+    <script src="scripts/test/test-app.js"></script>
+
+    <script src="scripts/mt.ui/services/menu.js"></script>
+    <script src="scripts/mt.ui/controllers/menu.js"></script>
+   <!-- endbuild -->
+  </body>
+</html>

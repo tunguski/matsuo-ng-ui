@@ -138,6 +138,17 @@ angular.module('mt.ui', ['ui.bootstrap', 'ui.select2', 'mt.route', 'mt.resource'
         }
       });
     })
+    .provider('userGroupConfiguration', function () {
+      var self = this;
+
+      this.$get = function () { return ''; };
+
+      // placeholder for refreshing user group configuration
+      this.refreshAppUserConfiguration = angular.noop;
+
+      return self;
+    })
+
 ;
 
 function baseAppController($scope, $route, $rootScope, $location, $timeout, $dialog, userGroupConfiguration, Login) {
