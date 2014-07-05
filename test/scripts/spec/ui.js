@@ -98,6 +98,28 @@ describe('UI -', function () {
     expect($('iframe').length).toBe(1);
   });
 
+  describe('services', function () {
+    describe('baseAppController', function () {
+      var baseAppController;
+      beforeEach(inject(function (_baseAppController_) {
+        baseAppController = _baseAppController_;
+      }));
+
+      it('', function () {
+        baseAppController(scope);
+
+        expect(scope.afterLogged).toBeDefined();
+        expect(scope.isLoggedIn).toBeDefined();
+        expect(scope.isLoggedOff).toBeDefined();
+        expect(scope.checkIsLogged).toBeDefined();
+        expect(scope.login).toBeDefined();
+        expect(scope.hideWrongPasswordMessage).toBeDefined();
+        expect(scope.logoff).toBeDefined();
+        expect(scope.remindPassword).toBeDefined();
+      });
+    });
+  });
+
   describe('controllers', function () {
     describe('AppController', function () {
       beforeEach(inject(function ($controller) {

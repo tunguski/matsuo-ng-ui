@@ -91,11 +91,11 @@ angular.module('mt.ui', ['ui.bootstrap', 'ui.select2', 'mt.route', 'mt.resource'
         };
         if (iframe.attachEvent) { 
           iframe.attachEvent('onload', iFrameLoaded); // for IE
-	} else if (iframe.addEventListener) {
-	  iframe.addEventListener('load', iFrameLoaded, false); // for most other browsers
-	} else {
-	  iframe.onload = iFrameLoaded; // just in case there's a browser not covered by the first two
-	}
+        } else if (iframe.addEventListener) {
+          iframe.addEventListener('load', iFrameLoaded, false); // for most other browsers
+        } else {
+          iframe.onload = iFrameLoaded; // just in case there's a browser not covered by the first two
+        }
 
         document.body.appendChild(iframe);
       };
@@ -115,6 +115,13 @@ angular.module('mt.ui', ['ui.bootstrap', 'ui.select2', 'mt.route', 'mt.resource'
     })
 
   // define custom handler
+    /**
+     * @ngdoc function
+     * @name mt.ui.factory:mtTranslateHandlerFactory
+     * @description
+     * # mtTranslateHandlerFactory
+     * Factory of the mt.ui
+     */
     .factory('mtTranslateHandlerFactory', function ($translate) {
       // has to return a function which gets a tranlation ID
       return function (translationID) {
@@ -148,132 +155,160 @@ angular.module('mt.ui', ['ui.bootstrap', 'ui.select2', 'mt.route', 'mt.resource'
 
       return self;
     })
-
-;
-
-function baseAppController($scope, $route, $rootScope, $location, $timeout, $dialog, userGroupConfiguration, Login) {
-  $scope.loginData = {};
-
-
-  if ($rootScope.user) {
-    userGroupConfiguration.refreshAppUserConfiguration();
-  }
-
-  $rootScope.$on('loggedIn', userGroupConfiguration.refreshAppUserConfiguration);
+    /**
+     * @ngdoc function
+     * @name mt.ui.service:baseAppController
+     * @description
+     * # baseAppController
+     * Service of the mt.ui
+     */
+    .service('baseAppController', function ($route, $rootScope, $location, $timeout, $dialog, userGroupConfiguration, Login) {
+      return function ($scope) {
+        $scope.loginData = {};
 
 
-  $scope.afterLogged = function (data) {
-    Login.getUser(scopeSetter($rootScope, 'user')).$promise.then(function (user) {
-      $scope.loginData = {};
-      $scope.errorClass = '';
-      $rootScope.loggedIn = !!data;
-      $scope.showWrongPasswordMessage = false;
+        if ($rootScope.user) {
+          userGroupConfiguration.refreshAppUserConfiguration();
+        }
 
-      $rootScope.$broadcast('loggedIn');
-      $route.reload();
-      $location.url('');
-    });
-  };
+        $rootScope.$on('loggedIn', userGroupConfiguration.refreshAppUserConfiguration);
 
 
-  $scope.isLoggedIn = function () {
-    return $rootScope.loggedIn === true;
-  };
+        $scope.afterLogged = function (data) {
+          Login.getUser(scopeSetter($rootScope, 'user')).$promise.then(function (user) {
+            $scope.loginData = {};
+            $scope.errorClass = '';
+            $rootScope.loggedIn = !!data;
+            $scope.showWrongPasswordMessage = false;
 
-
-  $scope.isLoggedOff = function () {
-    return $rootScope.loggedIn === false;
-  };
-
-
-  $scope.checkIsLogged = function () {
-    Login.get(function(data) {
-      if (data && !$rootScope.loggedIn) {
-        $scope.afterLogged(data);
-      } else if (!data) {
-        $rootScope.loggedIn = false;
-      }
-    });
-  };
-  $scope.checkIsLogged();
-
-
-  $scope.login = function() {
-    Login.login($scope.loginData,
-        function(data) {
-          $scope.afterLogged(data);
-          toastr.success($scope.translate('login.success'));
-        },
-        function () {
-          $scope.errorClass = 'text-red';
-          $scope.showWrongPasswordMessage = true;
-        });
-  };
-
-  $scope.hideWrongPasswordMessage = function () {
-    $scope.showWrongPasswordMessage = false;
-  };
-
-
-  $scope.logoff = function() {
-    Login.logoff(function () {
-      $rootScope.loggedIn = false;
-    });
-  };
-
-  $scope.remindPassword = function() {
-    $dialog.simpleDialog('/views/login/remindPasswordModal.html', 'RemindPasswordDialogController')();
-  };
-
-  $timeout(function() {
-    $('.hidden-on-startup').removeClass('hidden-on-startup');
-  }, 200);
-}
-
-function AppController($scope, $route, $rootScope, $location, $timeout, $dialog, userGroupConfiguration, Login) {
-  baseAppController($scope, $route, $rootScope, $location, $timeout, $dialog, userGroupConfiguration, Login);
-}
-
-
-function RemindPasswordDialogController($scope, $http, $modalInstance) {
-  $scope.remind = {};
-
-  $scope.remindPassword = function() {
-    if ($scope.remind.username) {
-      $http.post('/api/login/remindPassword/' + $scope.remind.username)
-          .success(function () {
-            toastr.success('Przesłano email z linkiem zmiany hasła');
-            $modalInstance.close();
+            $rootScope.$broadcast('loggedIn');
+            $route.reload();
+            $location.url('');
           });
-    } else {
-      $scope.errorClass = 'text-red';
-    }
-  };
-
-  $scope.close = function() {
-    $modalInstance.close();
-  };
-}
+        };
 
 
-function HeaderController($scope, $location, $dialog) {
-
-  $scope.showHelp = function() {
-    log('Show help for: ' + $location.path());
-
-    function cleanPath() {
-      return _.reduce($location.path().split('/'), function (memo, element) {
-        return memo + (parseInt(element) ? '' : '/' + element); }, '').substr(1);
-    }
-
-    $dialog.simpleDialog('help' + cleanPath() + 'Help.html', 'HelpDialogController')();
-  };
-}
+        $scope.isLoggedIn = function () {
+          return $rootScope.loggedIn === true;
+        };
 
 
-function HelpDialogController($scope, $modalInstance) {
-  $scope.close = function(result) { $modalInstance.close(result); };
-}
+        $scope.isLoggedOff = function () {
+          return $rootScope.loggedIn === false;
+        };
+
+
+        $scope.checkIsLogged = function () {
+          Login.get(function(data) {
+            if (data && !$rootScope.loggedIn) {
+              $scope.afterLogged(data);
+            } else if (!data) {
+              $rootScope.loggedIn = false;
+            }
+          });
+        };
+        $scope.checkIsLogged();
+
+
+        $scope.login = function() {
+          Login.login($scope.loginData,
+              function(data) {
+                $scope.afterLogged(data);
+                toastr.success($scope.translate('login.success'));
+              },
+              function () {
+                $scope.errorClass = 'text-red';
+                $scope.showWrongPasswordMessage = true;
+              });
+        };
+
+        $scope.hideWrongPasswordMessage = function () {
+          $scope.showWrongPasswordMessage = false;
+        };
+
+
+        $scope.logoff = function() {
+          Login.logoff(function () {
+            $rootScope.loggedIn = false;
+          });
+        };
+
+        $scope.remindPassword = function() {
+          $dialog.simpleDialog('/views/login/remindPasswordModal.html', 'RemindPasswordDialogController')();
+        };
+
+        $timeout(function() {
+          $('.hidden-on-startup').removeClass('hidden-on-startup');
+        }, 200);
+      };
+    })
+
+    /**
+     * @ngdoc function
+     * @name mt.ui.controller:AppController
+     * @description
+     * # AppController
+     * Controller of the mt.ui
+     */
+    .controller('AppController', function ($scope, baseAppController) {
+      baseAppController($scope);
+    })
+    /**
+     * @ngdoc function
+     * @name mt.ui.controller:RemindPasswordDialogController
+     * @description
+     * # RemindPasswordDialogController
+     * Controller of the mt.ui
+     */
+    .controller('RemindPasswordDialogController', function ($scope, $http, $modalInstance) {
+      $scope.remind = {};
+
+      $scope.remindPassword = function() {
+        if ($scope.remind.username) {
+          $http.post('/api/login/remindPassword/' + $scope.remind.username)
+              .success(function () {
+                toastr.success('Przesłano email z linkiem zmiany hasła');
+                $modalInstance.close();
+              });
+        } else {
+          $scope.errorClass = 'text-red';
+        }
+      };
+
+      $scope.close = function() {
+        $modalInstance.close();
+      };
+    })
+    /**
+     * @ngdoc function
+     * @name mt.ui.controller:HeaderController
+     * @description
+     * # HeaderController
+     * Controller of the mt.ui
+     */
+    .controller('HeaderController', function ($scope, $location, $dialog) {
+
+      $scope.showHelp = function() {
+        log('Show help for: ' + $location.path());
+
+        function cleanPath() {
+          return _.reduce($location.path().split('/'), function (memo, element) {
+            return memo + (parseInt(element) ? '' : '/' + element); }, '').substr(1);
+        }
+
+        $dialog.simpleDialog('help' + cleanPath() + 'Help.html', 'HelpDialogController')();
+      };
+    })
+    /**
+     * @ngdoc function
+     * @name mt.ui.controller:HelpDialogController
+     * @description
+     * # HelpDialogController
+     * Controller of the mt.ui
+     */
+    .controller('HelpDialogController', function ($scope, $modalInstance) {
+      $scope.close = function(result) { $modalInstance.close(result); };
+    });
 
 /**
  * For unstable directives.
