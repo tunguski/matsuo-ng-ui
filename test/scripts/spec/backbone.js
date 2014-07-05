@@ -1,6 +1,13 @@
 describe('Backbone', function () {
 
 
+  var Test, q;
+  beforeEach(inject(function (_Test_, $q) {
+    Test = _Test_;
+    q = $q;
+  }));
+
+
   it('formatResult', function () {
     var formatFunction = formatResult(function (a) { return '' + a; });
     expect(formatFunction('tobby')).toBe('tobby');
@@ -89,12 +96,6 @@ describe('Backbone', function () {
 
 
   describe('searchQueryFunction', function () {
-    var Test;
-    beforeEach(inject(function (_Test_) {
-      Test = _Test_;
-    }));
-
-
     it('basic', function () {
       searchQueryFunction(scope, Test);
       scope.query = 'fafa';
@@ -226,6 +227,40 @@ describe('Backbone', function () {
       initializeSelect2(scope, 'results.idContainer', null, 'person', {
         removeProperties: [ 'ajax' ]
       });
+    });
+
+    it('deferred resource', function () {
+      initializeSelect2(scope, 'idContainer', null, 'person', {
+        bindId: true
+      });
+
+      var deferred = q.defer();
+
+      scope.idContainer.value = {
+        $promise: deferred.promise
+      };
+
+      scope.$digest();
+
+      deferred.resolve({});
+
+      scope.$digest();
+    });
+
+    it('bindId as resource', function () {
+      initializeSelect2(scope, 'entity.idContainer', null, 'person', {
+        bindId: 'Test'
+      });
+
+      scope.entity = { idContainer: 11 };
+
+      http.expectGET('/api/tests/11').respond('{ "name": "test" }');
+
+      scope.$digest();
+      http.flush();
+
+      // fixme: should work?
+      //expect(scope.idContainer.value.name).toBe('test');
     });
   });
 
