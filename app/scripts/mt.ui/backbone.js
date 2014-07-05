@@ -325,24 +325,24 @@ function initializeSelect2($scope, path, url, formatPrefix, optionsExtensions) {
   }
 
   if (optionsExtensions && optionsExtensions.removeProperties) {
-    $.forEach(optionsExtensions.removeProperties, function(element) {
+    angular.forEach(optionsExtensions.removeProperties, function(element) {
       delete obj.options[element];
     });
   }
+}
 
 
-  function loadEnum() {
-    throw 'loadEnum is not implemented properly';
-  }
+function loadEnum() {
+  throw 'loadEnum is not implemented properly';
+}
 
 
-  function initializeEnumSelect2($scope, $http, name, options) {
-    options = options || {};
-    initializeSelect2($scope, 'form.' + name, null, name, $.extend(true, {
-      minimumInputLength: 0,
-      bindId: true,
-      definedElements: loadEnum($http, name + 'Enum')
-    }, options));
-  }
+function initializeEnumSelect2($scope, $http, name, options) {
+  options = options || {};
+  initializeSelect2($scope, 'form.' + name, null, name, $.extend(true, {
+    minimumInputLength: 0,
+    bindId: true,
+    definedElements: loadEnum($http, name + 'Enum')
+  }, options));
 }
 

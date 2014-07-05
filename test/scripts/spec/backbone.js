@@ -192,6 +192,62 @@ describe('Backbone', function () {
       scope.$digest();
       expect(scope.results.idContainer).toBe(7);
     });
+
+    it('bindEntity function', function () {
+      scope.results = {};
+      var invoked = false;
+
+      initializeSelect2(scope, 'results.idContainer', null, 'person', {
+        bindEntity: function () {
+          invoked = true;
+        }
+      });
+      scope.idContainer.value = { id: 7 };
+      scope.$digest();
+      expect(invoked).toBe(true);
+    });
+
+    it('defined elements', function () {
+      scope.results = {};
+
+      initializeSelect2(scope, 'results.idContainer', null, 'person', {
+        definedElements: function () {
+          return [
+            { id: 1, text: 'a' },
+            { id: 2, text: 'b' }
+          ];
+        }
+      });
+    });
+
+    it('remove properties', function () {
+      scope.results = {};
+
+      initializeSelect2(scope, 'results.idContainer', null, 'person', {
+        removeProperties: [ 'ajax' ]
+      });
+    });
+  });
+
+
+  describe('initializeEnumSelect2', function () {
+    it('basic', function () {
+      // fixme: throws exception
+      expect(function () {
+        // $scope, $http, name, options
+        initializeEnumSelect2(scope, http, 'results');
+      }).toThrow();
+    });
+
+    it('complex', function () {
+      // fixme: throws exception
+      expect(function () {
+        initializeEnumSelect2(scope, http, 'results.idContainer', 'person', {
+          bindId: 'Test',
+          bindEntity: 'rewrite.to'
+        });
+      }).toThrow();
+    });
   });
 });
 
