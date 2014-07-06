@@ -52,6 +52,10 @@ angular.module('test.module', ['mt.ui'])
     .config(function (restFactoryProvider) {
       restFactoryProvider.define('Test');
     })
+    .config(function(userGroupConfigurationProvider) {
+      userGroupConfigurationProvider.groupToDefaultRoute.push({ groupName: 'TEST', defaultRoute: '/base/test'});
+      userGroupConfigurationProvider.groupToDefaultRoute.push({ groupName: '', defaultRoute: '/base/test2'});
+    })
 ;
 beforeEach(module('test.module'));
 

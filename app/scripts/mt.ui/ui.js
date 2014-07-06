@@ -145,13 +145,27 @@ angular.module('mt.ui', ['ui.bootstrap', 'ui.select2', 'mt.route', 'mt.resource'
         }
       });
     })
-    .provider('userGroupConfiguration', function () {
+    .provider('userGroupConfiguration', function (mtRouteConfig) {
       var self = this;
 
-      this.$get = function () { return ''; };
+      self.groupToDefaultRoute = [];
 
-      // placeholder for refreshing user group configuration
-      this.refreshAppUserConfiguration = angular.noop;
+      this.$get = function ($rootScope, $route) {
+        return {
+          // placeholder for refreshing user group configuration
+          refreshAppUserConfiguration: function () {
+            var groups = _.pluck($rootScope.user.groups, 'name');
+            // default group
+            groups.push('');
+            var element = _.find(self.groupToDefaultRoute, function (element) {
+              return _.contains(groups, element.groupName);
+            });
+
+            mtRouteConfig.defaultRoute = element ? element.defaultRoute : '';
+            $route.routes['null'] = mtRouteConfig.defaultRoute;
+          }
+        };
+      };
 
       return self;
     })

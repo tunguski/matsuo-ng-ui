@@ -105,7 +105,7 @@ describe('UI -', function () {
         baseAppController = _baseAppController_;
       }));
 
-      it('', function () {
+      it('works', function () {
         baseAppController(scope);
 
         expect(scope.afterLogged).toBeDefined();
@@ -116,6 +116,26 @@ describe('UI -', function () {
         expect(scope.hideWrongPasswordMessage).toBeDefined();
         expect(scope.logoff).toBeDefined();
         expect(scope.remindPassword).toBeDefined();
+      });
+    });
+
+    describe('userGroupConfiguration', function () {
+      var userGroupConfiguration, $route;
+      beforeEach(inject(function (_userGroupConfiguration_, _$route_) {
+        userGroupConfiguration = _userGroupConfiguration_;
+        $route = _$route_;
+      }));
+
+      it('group route works', function () {
+        rootScope.user = { groups: [ { name: 'TEST' } ] };
+        userGroupConfiguration.refreshAppUserConfiguration();
+        expect($route.routes['null']).toBe('/base/test');
+      });
+
+      it('default route works', function () {
+        rootScope.user = { groups: [ { name: 'XLL' } ] };
+        userGroupConfiguration.refreshAppUserConfiguration();
+        expect($route.routes['null']).toBe('/base/test2');
       });
     });
   });
