@@ -30,11 +30,12 @@ angular.module('mt.ui')
       };
     })
 
-    .directive('mtFormField', function (mtFormConfig) {
+    .directive('mtFormField', function ($http, $compile, mtFormConfig) {
       return {
         require: '^mtFormPart',
         replace: true,
-        template: '<ng-include src="fieldUrl()" />',
+        template: '<div ng-bind-html="fieldBody"></div>',
+//        template: '<div></div>',
         scope: {
           fieldName: '@mtFormField',
           htmlName: '@mtHtmlName',
@@ -58,6 +59,15 @@ angular.module('mt.ui')
             return mtFormConfig.bootstrapUrlBase + '?' + _.toUrlParams(params);
           };
 
+          $http.get(scope.fieldUrl()).success(function (html) {
+            html = html.trim();
+            if (html.indexOf('"') == 0) {
+              html = html.substr(1, html.length - 2).trim();
+            }
+            html = html.replace(/\\"/g, '"').replace(/\\n/g, '');
+            //iElement.html(html);
+            scope.fieldBody = $compile(html)(scope).get();
+          });
         }
       };
     })
