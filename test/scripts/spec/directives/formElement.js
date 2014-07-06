@@ -17,15 +17,15 @@ describe('Form element -', function () {
 
   it('basic entity field', function () {
     checkGeneratedGET('<div mt-form-part="Person"><div mt-form-field="firstName" /></div>',
-        '/api/bootstrap?entityClass=Person&fieldName=firstName');
+        '/api/bootstrapRenderer?entityClass=Person&fieldName=firstName');
   });
 
 
   it('list of basic fields', function () {
     var template = checkGeneratedGET(
         '<div mt-form-part="Person"><div mt-form-field="firstName" /><div mt-form-field="lastName" /></div>',
-        '/api/bootstrap?entityClass=Person&fieldName=firstName',
-        '/api/bootstrap?entityClass=Person&fieldName=lastName');
+        '/api/bootstrapRenderer?entityClass=Person&fieldName=firstName',
+        '/api/bootstrapRenderer?entityClass=Person&fieldName=lastName');
 
     expect(template.html().split("field ng-scope").length).toBe(3);
   });
@@ -33,47 +33,47 @@ describe('Form element -', function () {
 
   it('custom entity name', function () {
     checkGeneratedGET('<div mt-form-part="Tool" mt-entity-name="person"><div mt-form-field="name" /></div>',
-        '/api/bootstrap?entityClass=Tool&entityName=person&fieldName=name');
+        '/api/bootstrapRenderer?entityClass=Tool&entityName=person&fieldName=name');
   });
 
 
   it('custom html field name', function () {
     checkGeneratedGET('<div mt-form-part="Company"><div mt-form-field="idOwner" mt-html-name="owner.id" /></div>',
-        '/api/bootstrap?entityClass=Company&fieldName=idOwner&htmlName=owner.id');
+        '/api/bootstrapRenderer?entityClass=Company&fieldName=idOwner&htmlName=owner.id');
   });
 
 
   it('with attributes', function () {
     checkGeneratedGET('<div mt-form-part="Person"><div mt-form-field="firstName" mtf-ng-disabled="true" mtf-custom-attr="xxxy"></div></div>',
-        '/api/bootstrap?entityClass=Person&fieldName=firstName&mtfNgDisabled=true&mtfCustomAttr=xxxy');
+        '/api/bootstrapRenderer?entityClass=Person&fieldName=firstName&mtfNgDisabled=true&mtfCustomAttr=xxxy');
   });
 
 
   it('inline', function () {
     checkGeneratedGET('<div mt-form-part="Person" mt-inline="true"><div mt-form-field="firstName"></div></div>',
-        '/api/bootstrap?entityClass=Person&inline=true&fieldName=firstName');
+        '/api/bootstrapRenderer?entityClass=Person&inline=true&fieldName=firstName');
   });
 
 
   it('single field', function () {
     checkGeneratedGET('<div mt-form-part="Person" mt-single-field="true"><div mt-form-field="firstName"></div></div>',
-        '/api/bootstrap?entityClass=Person&singleField=true&fieldName=firstName');
+        '/api/bootstrapRenderer?entityClass=Person&singleField=true&fieldName=firstName');
   });
 
   describe('css classes -', function () {
     it('with css classes', function () {
       checkGeneratedGET('<div mt-form-part="Person" mt-css-classes="yellow big"><div mt-form-field="firstName"></div></div>',
-          '/api/bootstrap?entityClass=Person&cssClasses=yellow big&fieldName=firstName');
+          '/api/bootstrapRenderer?entityClass=Person&cssClasses=yellow big&fieldName=firstName');
     });
 
     it('with css classes', function () {
       checkGeneratedGET('<div mt-form-part="Person"><div mt-form-field="firstName" mt-css-classes="red small"></div></div>',
-          '/api/bootstrap?entityClass=Person&cssClasses=red small&fieldName=firstName');
+          '/api/bootstrapRenderer?entityClass=Person&cssClasses=red small&fieldName=firstName');
     });
 
     it('with css classes', function () {
       checkGeneratedGET('<div mt-form-part="Person" mt-css-classes="big"><div mt-form-field="firstName" mt-css-classes="red"></div></div>',
-          '/api/bootstrap?entityClass=Person&cssClasses=big red&fieldName=firstName');
+          '/api/bootstrapRenderer?entityClass=Person&cssClasses=big red&fieldName=firstName');
     });
   });
 });

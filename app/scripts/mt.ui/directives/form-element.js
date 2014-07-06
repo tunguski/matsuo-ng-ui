@@ -1,6 +1,9 @@
 'use strict';
 
 angular.module('mt.ui')
+    .value('mtFormConfig', {
+      bootstrapUrlBase: '/api/bootstrapRenderer'
+    })
     .directive('mtFormPart', function () {
       return {
         replace: true,
@@ -27,7 +30,7 @@ angular.module('mt.ui')
       };
     })
 
-    .directive('mtFormField', function () {
+    .directive('mtFormField', function (mtFormConfig) {
       return {
         require: '^mtFormPart',
         replace: true,
@@ -52,7 +55,7 @@ angular.module('mt.ui')
                 });
 
 
-            return '/api/bootstrap?' + _.toUrlParams(params);
+            return mtFormConfig.bootstrapUrlBase + '?' + _.toUrlParams(params);
           };
 
         }
