@@ -3,13 +3,6 @@
 angular.module('mt.ui')
     .factory('$dialog', ['$rootScope', '$modal', '$http', function($rootScope, $modal, $http) {
 
-      function dialog(modalOptions, resultFn) {
-        var dialogInstance = $modal.open(modalOptions);
-        if (resultFn) { dialogInstance.result.then(resultFn); }
-        dialogInstance.values = modalOptions;
-        return dialogInstance;
-      }
-
       function modalOptions(templateUrl, controller, scope) {
         return { templateUrl:  templateUrl, controller: controller, scope: scope }; }
 
@@ -17,13 +10,18 @@ angular.module('mt.ui')
         /**
          * Creates and opens dialog.
          */
-        dialog: dialog,
+        dialog: function (modalOptions, resultFn) {
+          var dialogInstance = $modal.open(modalOptions);
+          if (resultFn) { dialogInstance.result.then(resultFn); }
+          dialogInstance.values = modalOptions;
+          return dialogInstance;
+        },
 
         /**
          * Returns 0-parameter function that opens dialog on evaluation.
          */
         simpleDialog: function(templateUrl, controller, resultFn) {
-          return function () { return dialog(modalOptions(templateUrl, controller), resultFn); };
+          return function () { return dialogProvider.dialog(modalOptions(templateUrl, controller), resultFn); };
         },
 
         /**
@@ -31,7 +29,7 @@ angular.module('mt.ui')
          */
         messageBox: function(title, message, buttons, resultFn) {
           var scope = angular.extend($rootScope.$new(false), { title: title, message: message, buttons: buttons });
-          return dialog(modalOptions('template/messageBox/message.html', 'MessageBoxController', scope),
+          return dialogProvider.dialog(modalOptions('template/messageBox/message.html', 'MessageBoxController', scope),
               function (result) {
                 var value = resultFn ? resultFn(result) : undefined;
                 scope.$destroy();
