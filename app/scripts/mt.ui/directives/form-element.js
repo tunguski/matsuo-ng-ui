@@ -35,6 +35,7 @@ angular.module('mt.ui')
         require: '^mtFormPart',
         replace: true,
         template: '<div ng-bind-html="fieldBody"></div>',
+        scope: true,
         link: function (scope, iElement, iAttrs, ctrl) {
           function fieldUrl() {
             // get basic params from outer mt-form-part
