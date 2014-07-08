@@ -79,10 +79,6 @@ angular.module('mt.ui')
           });
         };
 
-        $scope.remindPassword = function() {
-          $dialog.simpleDialog('/views/login/remindPasswordModal.html', 'RemindPasswordDialogCtrl')();
-        };
-
         $timeout(function() {
           $('.hidden-on-startup').removeClass('hidden-on-startup');
         }, 200);

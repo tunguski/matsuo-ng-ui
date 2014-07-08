@@ -8,17 +8,17 @@ angular.module('mt.ui')
      * # LoginCtrl
      * Controller of the mt.ui
      */
-    .controller('LoginCtrl', function ($scope, $location, $dialog) {
-
-      $scope.showHelp = function() {
-        log('Show help for: ' + $location.path());
-
-        function cleanPath() {
-          return _.reduce($location.path().split('/'), function (memo, element) {
-            return memo + (parseInt(element) ? '' : '/' + element); }, '').substr(1);
-        }
-
-        $dialog.simpleDialog('help' + cleanPath() + 'Help.html', 'HelpDialogCtrl')();
+    .controller('LoginCtrl', function ($scope, $dialog) {
+      $scope.showLoginView = function () {
+        $scope.loginView = '/views/login/login.html';
       };
+      $scope.showLoginView();
+
+      $scope.showCreateAccountView = function () {
+        $scope.loginView = '/views/login/createAccount.html';
+      };
+
+      $scope.remindPassword = $dialog.simpleDialog('/views/login/remindPasswordModal.html', 'RemindPasswordDialogCtrl');
+      $scope.createAccount = $dialog.simpleDialog('/views/login/createAccountModal.html', 'CreateAccountDialogCtrl');
     })
 ;
