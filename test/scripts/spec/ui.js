@@ -115,7 +115,6 @@ describe('UI -', function () {
         expect(scope.login).toBeDefined();
         expect(scope.hideWrongPasswordMessage).toBeDefined();
         expect(scope.logoff).toBeDefined();
-        expect(scope.remindPassword).toBeDefined();
       });
     });
 
