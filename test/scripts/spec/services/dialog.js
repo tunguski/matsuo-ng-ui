@@ -16,7 +16,7 @@ describe('Dialog service -', function () {
 
     var dialog = $dialog.dialog({
       templateUrl:  'test/dialog.html',
-      controller: 'TestDialogController',
+      controller: 'TestDialogCtrl',
       testValue: 'testValue'
     }, function (result) {
       expect(result).toBe('testResult');
@@ -36,7 +36,7 @@ describe('Dialog service -', function () {
   it('simple dialog works', function () {
     var resultOk = false;
 
-    var dialogFunction = $dialog.simpleDialog('test/dialog.html', 'TestSimpleDialogController', function (result) {
+    var dialogFunction = $dialog.simpleDialog('test/dialog.html', 'TestSimpleDialogCtrl', function (result) {
       expect(result).toBe('testResult');
       resultOk = true;
     });

@@ -99,14 +99,14 @@ describe('UI -', function () {
   });
 
   describe('services', function () {
-    describe('baseAppController', function () {
-      var baseAppController;
-      beforeEach(inject(function (_baseAppController_) {
-        baseAppController = _baseAppController_;
+    describe('baseAppCtrl', function () {
+      var baseAppCtrl;
+      beforeEach(inject(function (_baseAppCtrl_) {
+        baseAppCtrl = _baseAppCtrl_;
       }));
 
       it('works', function () {
-        baseAppController(scope);
+        baseAppCtrl(scope);
 
         expect(scope.afterLogged).toBeDefined();
         expect(scope.isLoggedIn).toBeDefined();
@@ -141,9 +141,9 @@ describe('UI -', function () {
   });
 
   describe('controllers', function () {
-    describe('AppController', function () {
+    describe('AppCtrl', function () {
       beforeEach(inject(function ($controller) {
-        controller = $controller('AppController', {$scope: scope});
+        controller = $controller('AppCtrl', {$scope: scope});
       }));
 
       it ('login works', function () {
@@ -190,13 +190,13 @@ describe('UI -', function () {
       });
     });
 
-    describe('RemindPasswordDialogController', function () {
+    describe('RemindPasswordDialogCtrl', function () {
       var $modalInstance;
       beforeEach(inject(function ($controller) {
         $modalInstance = {
           close: function () {}
         };
-        controller = $controller('RemindPasswordDialogController', {$scope: scope, $modalInstance: $modalInstance});
+        controller = $controller('RemindPasswordDialogCtrl', {$scope: scope, $modalInstance: $modalInstance});
       }));
 
       it('remindPassword', function () {
@@ -207,10 +207,10 @@ describe('UI -', function () {
       });
     });
 
-    describe('HeaderController', function () {
+    describe('HeaderCtrl', function () {
       var $location;
       beforeEach(inject(function ($controller, _$location_) {
-        controller = $controller('HeaderController', {$scope: scope});
+        controller = $controller('HeaderCtrl', {$scope: scope});
         $location = _$location_;
       }));
 

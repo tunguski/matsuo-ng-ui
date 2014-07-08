@@ -29,7 +29,7 @@ angular.module('mt.ui')
          */
         messageBox: function(title, message, buttons, resultFn) {
           var scope = angular.extend($rootScope.$new(false), { title: title, message: message, buttons: buttons });
-          return dialogProvider.dialog(modalOptions('template/messageBox/message.html', 'MessageBoxController', scope),
+          return dialogProvider.dialog(modalOptions('template/messageBox/message.html', 'MessageBoxCtrl', scope),
               function (result) {
                 var value = resultFn ? resultFn(result) : undefined;
                 scope.$destroy();
@@ -86,7 +86,7 @@ angular.module('mt.ui')
           '<div class="modal-body"><p ng-bind-html="message"></p></div>\n' +
           '<div class="modal-footer"><button ng-repeat="btn in buttons" ng-click="close(btn.result)" class="btn" ng-class="btn.cssClass" translate="btn.label"></button></div>\n');
     }])
-    .controller('MessageBoxController', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+    .controller('MessageBoxCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
       $scope.close = function (result) { $modalInstance.close(result); };
     }]);
 
