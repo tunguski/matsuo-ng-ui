@@ -171,12 +171,12 @@ angular.module('mt.ui', ['ui.bootstrap', 'ui.select2', 'mt.route', 'mt.resource'
     })
     /**
      * @ngdoc function
-     * @name mt.ui.controller:HelpDialogCtrl
+     * @name mt.ui.controller:HelpModalCtrl
      * @description
-     * # HelpDialogCtrl
+     * # HelpModalCtrl
      * Controller of the mt.ui
      */
-    .controller('HelpDialogCtrl', function ($scope, $modalInstance) {
+    .controller('HelpModalCtrl', function ($scope, $modalInstance) {
       $scope.close = function(result) { $modalInstance.close(result); };
     });
 

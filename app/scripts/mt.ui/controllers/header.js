@@ -18,7 +18,7 @@ angular.module('mt.ui')
             return memo + (parseInt(element) ? '' : '/' + element); }, '').substr(1);
         }
 
-        $dialog.simpleDialog('help' + cleanPath() + 'Help.html', 'HelpDialogCtrl')();
+        $dialog.simpleDialog('help' + cleanPath() + 'Help.html', 'HelpModalCtrl')();
       };
     })
 ;

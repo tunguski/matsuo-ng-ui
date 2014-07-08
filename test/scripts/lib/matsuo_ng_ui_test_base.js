@@ -44,10 +44,10 @@ angular.module('test.module', ['mt.ui'])
               '<div class="modal-body"><p ng-bind-html="message"></p></div>\n' +
               '<div class="modal-footer"></div>\n');
     }])
-    .controller('TestDialogCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+    .controller('TestModalCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
       expect($modalInstance.values.testValue).toBe('testValue');
     }])
-    .controller('TestSimpleDialogCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+    .controller('TestSimpleModalCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
     }])
     .config(function (restFactoryProvider) {
       restFactoryProvider.define('Test');

@@ -8,28 +8,22 @@
  * Controller of the mt.ui
  */
 angular.module('mt.ui')
-    .controller('MenuCtrl', function ($scope, menuService, permissionService) {
+    .controller('MenuCtrl', function ($scope, $rootScope, $location, $route, menuService, permissionService) {
       $scope.menuService = menuService;
 
-//      $('ul.dropdown-menu [data-toggle=dropdown]').on('click', function(event) {
-//        // Avoid following the href location when clicking
-//        event.preventDefault();
-//        // Avoid having the menu to close when clicking
-//        event.stopPropagation();
-//        // If a menu is already open we close it
-//        //$('ul.dropdown-menu [data-toggle=dropdown]').parent().removeClass('open');
-//        // opening the one you clicked on
-//        $(this).parent().addClass('open');
-//
-//        var menu = $(this).parent().find("ul");
-//        var menupos = menu.offset();
-//
-//        if ((menupos.left + menu.width()) + 30 > $(window).width()) {
-//          var newpos = - menu.width();
-//        } else {
-//          var newpos = $(this).parent().width();
-//        }
-//        menu.css({ left:newpos });
-//      });
+      $scope.homeLink = function () {
+        $location.url($route.routes['null']);
+      };
 
+      $scope.displayUser = function () {
+        if ($scope.user) {
+          if ($scope.user.person.firstName || $scope.user.person.lastName) {
+            return ($scope.user.person.firstName || '') + ' ' + ($scope.user.person.lastName || '');
+          } else {
+            return $scope.user.username;
+          }
+        } else {
+          return '[]';
+        }
+      }
     });

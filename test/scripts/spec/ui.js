@@ -190,13 +190,13 @@ describe('UI -', function () {
       });
     });
 
-    describe('RemindPasswordDialogCtrl', function () {
+    describe('RemindPasswordModalCtrl', function () {
       var $modalInstance;
       beforeEach(inject(function ($controller) {
         $modalInstance = {
           close: function () {}
         };
-        controller = $controller('RemindPasswordDialogCtrl', {$scope: scope, $modalInstance: $modalInstance});
+        controller = $controller('RemindPasswordModalCtrl', {$scope: scope, $modalInstance: $modalInstance});
       }));
 
       it('remindPassword', function () {

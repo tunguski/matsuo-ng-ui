@@ -9,7 +9,7 @@ angular.module('mt.ui')
      * Controller of the mt.ui
      */
     .controller('LoginCtrl', function ($scope, $dialog) {
-      $scope.remindPassword = $dialog.simpleDialog('/views/login/remindPasswordModal.html', 'RemindPasswordDialogCtrl');
-      $scope.createAccount = $dialog.simpleDialog('/views/login/createAccountModal.html', 'CreateAccountDialogCtrl');
+      $scope.remindPassword = $dialog.simpleDialog('/views/login/remindPasswordModal.html', 'RemindPasswordModalCtrl');
+      $scope.createAccount = $dialog.simpleDialog('/views/login/createAccountModal.html', 'CreateAccountModalCtrl');
     })
 ;

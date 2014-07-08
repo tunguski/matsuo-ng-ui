@@ -3,12 +3,12 @@
 angular.module('mt.ui')
     /**
      * @ngdoc function
-     * @name mt.ui.controller:RemindPasswordDialogCtrl
+     * @name mt.ui.controller:RemindPasswordModalCtrl
      * @description
-     * # RemindPasswordDialogCtrl
+     * # RemindPasswordModalCtrl
      * Controller of the mt.ui
      */
-    .controller('RemindPasswordDialogCtrl', function ($scope, $http, $modalInstance) {
+    .controller('RemindPasswordModalCtrl', function ($scope, $http, $modalInstance) {
       $scope.remind = {};
 
       $scope.remindPassword = function() {
