@@ -2,11 +2,11 @@
 
 describe('Validation module', function () {
   describe('validationService', function () {
-    var _validationService, _dialog;
+    var _validationService, $dialog;
 
-    beforeEach(inject(function (validationService, $dialog) {
+    beforeEach(inject(function (validationService, _$dialog_) {
       _validationService = validationService;
-      _dialog = $dialog;
+      $dialog = _$dialog_;
     }));
 
 
@@ -33,9 +33,9 @@ describe('Validation module', function () {
 
 
     it('should show global errors', function () {
-      spyOn(_dialog, 'messageBox');
+      spyOn($dialog, 'messageBox');
       _validationService(scope)({ data: { globalErrors: [ "error_1", "error_2" ]}});
-      expect(_dialog.messageBox).toHaveBeenCalled();
+      expect($dialog.messageBox).toHaveBeenCalled();
     });
   });
 });
