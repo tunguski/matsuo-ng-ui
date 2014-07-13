@@ -20,11 +20,11 @@ angular.module('mt.ui', ['ui.bootstrap', 'ui.select2', 'mt.route', 'mt.resource'
       };
     })
 
-    .filter('formatDate', function() { return function(input) { return parseDate(input).format('YYYY-MM-DD'); };})
-    .filter('formatTime', function() { return function(input) { return parseDate(input).format('HH:mm'); };})
-    .filter('formatDateTime', function() { return function(input) { return parseDate(input).format('YYYY-MM-DD HH:mm'); };})
-    .filter('formatDayMoment', function() { return function(input) { return parseDate(input).format('ddd HH:mm'); };})
-    .filter('weekdayLabel', function() { return function(input) { return parseDate(input).format('dddd'); };})
+    .filter('formatDate', function() { return function(input) { return input ? parseDate(input).format('YYYY-MM-DD') : ''; };})
+    .filter('formatTime', function() { return function(input) { return input ? parseDate(input).format('HH:mm') : ''; };})
+    .filter('formatDateTime', function() { return function(input) { return input ? parseDate(input).format('YYYY-MM-DD HH:mm') : ''; };})
+    .filter('formatDayMoment', function() { return function(input) { return input ? parseDate(input).format('ddd HH:mm') : ''; };})
+    .filter('weekdayLabel', function() { return function(input) { return input ? parseDate(input).format('dddd') : ''; };})
 
 
     .filter('addressPresenter', function() {
