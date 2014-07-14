@@ -100,8 +100,8 @@ describe('Backbone', function () {
       searchQueryFunction(scope, Test);
       scope.query = 'fafa';
 
-      http.expectGET('/api/tests').respond('[{}, {}]');
-      http.expectGET('/api/tests?query=fafa').respond('[{}, {}]');
+      http.expectGET('/api/tests').respond([{}, {}]);
+      http.expectGET('/api/tests?query=fafa').respond([{}, {}]);
       scope.$digest();
       http.flush();
 
@@ -118,7 +118,7 @@ describe('Backbone', function () {
       });
       scope.query = 'fafa';
 
-      http.expectGET('/api/tests?query=fafa').respond('[{}, {}]');
+      http.expectGET('/api/tests?query=fafa').respond([{}, {}]);
       scope.$digest();
       http.flush();
 
@@ -141,7 +141,7 @@ describe('Backbone', function () {
       idEntity: 7
     }];
 
-    http.expectGET('/api/tests/list/byIds?ids=7').respond('[{ "id": 7 }]'); 
+    http.expectGET('/api/tests/list/byIds?ids=7').respond([{ id: 7 }]);
     loadAndInjectInternal(scope.list, Test, 'idEntity', 'entity', 'id', function () {
       resultFnExecuted = true;
     });
@@ -165,7 +165,7 @@ describe('Backbone', function () {
       idEntity: 7
     }];
 
-    http.expectGET('/api/tests/list/byIds?ids=7').respond('[{ "id": 7 }]'); 
+    http.expectGET('/api/tests/list/byIds?ids=7').respond([{ id: 7 }]);
     loadAndInject(scope.list, Test, 'entity', 'id', function () {
       resultFnExecuted = true;
     });
@@ -254,7 +254,7 @@ describe('Backbone', function () {
 
       scope.entity = { idContainer: 11 };
 
-      http.expectGET('/api/tests/11').respond('{ "name": "test" }');
+      http.expectGET('/api/tests/11').respond({ name: "test" });
 
       scope.$digest();
       http.flush();

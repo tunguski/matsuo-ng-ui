@@ -153,8 +153,8 @@ describe('UI -', function () {
 
         http.expectGET('/api/login').respond('');
         http.expectPOST('/api/login').respond('');
-        http.expectGET('/api/login/user').respond('{}');
-        http.expectGET('/api/login/user').respond('{}');
+        http.expectGET('/api/login/user').respond({});
+        http.expectGET('/api/login/user').respond({});
         scope.login();
         http.flush();
       });
