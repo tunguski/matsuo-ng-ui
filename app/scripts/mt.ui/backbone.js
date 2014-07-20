@@ -106,7 +106,7 @@ function scopeSetter(scope, propertyName) {
 }
 
 
-function saveOrUpdate($scope, field, saveFn, updateFn) {
+function saveOrUpdate($scope, field, saveFn, updateFn, requestParamsFn) {
   var validationFn = $scope.getService('validationService')($scope);
 
   function successFn(invokeFn) {
@@ -118,8 +118,9 @@ function saveOrUpdate($scope, field, saveFn, updateFn) {
 
   return function() {
     var entity = $scope[field];
-    return entity.isNew() ? entity.$save({}, successFn(saveFn), validationFn)
-        : entity.$update({}, successFn(updateFn), validationFn);
+    var requestParams = requestParamsFn ? requestParamsFn() : {};
+    var fn = entity.isNew() ? (entity.save || entity.$save) : (entity.update || entity.$update);
+    return fn(requestParams, successFn(entity.isNew() ? saveFn : updateFn), validationFn);
   };
 }
 
