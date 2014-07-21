@@ -120,7 +120,7 @@ function saveOrUpdate($scope, field, saveFn, updateFn, requestParamsFn) {
     var entity = $scope[field];
     var requestParams = requestParamsFn ? requestParamsFn() : {};
     var fn = entity.isNew() ? (entity.save || entity.$save) : (entity.update || entity.$update);
-    return fn(requestParams, successFn(entity.isNew() ? saveFn : updateFn), validationFn);
+    return fn.call(entity, requestParams, successFn(entity.isNew() ? saveFn : updateFn), validationFn);
   };
 }
 
