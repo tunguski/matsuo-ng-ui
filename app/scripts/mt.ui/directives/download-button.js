@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('mt.ui')
-    .directive('downloadButton', function factory() {
+    .directive('downloadButton', function () {
       return {
         replace: true,
         scope: {
