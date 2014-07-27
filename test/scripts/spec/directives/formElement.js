@@ -20,6 +20,12 @@ describe('Form element -', function () {
   });
 
 
+  it('entity name shortcut', function () {
+    checkGeneratedGET('<div mt-form-part="entityShortcut"><div mt-form-field="firstName" /></div>',
+        '/api/bootstrapRenderer?entityClass=com.test.EntityShortcut&fieldName=firstName');
+  });
+
+
   it('list of basic fields', function () {
     var template = checkGeneratedGET(
         '<div mt-form-part="Person"><div mt-form-field="firstName" /><div mt-form-field="lastName" /></div>',

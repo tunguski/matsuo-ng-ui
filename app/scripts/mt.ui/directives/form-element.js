@@ -2,7 +2,8 @@
 
 angular.module('mt.ui')
     .value('mtFormConfig', {
-      bootstrapUrlBase: '/api/bootstrapRenderer'
+      bootstrapUrlBase: '/api/bootstrapRenderer',
+      namesMap: {}
     })
     .directive('mtFormPart', function () {
       return {
@@ -46,6 +47,7 @@ angular.module('mt.ui')
             if (iAttrs.mtCssClasses) {
               params.cssClasses = (params.cssClasses ? params.cssClasses + ' ' : '') + iAttrs.mtCssClasses;
             }
+            params.entityClass = mtFormConfig.namesMap[params.entityClass] || params.entityClass;
 
             // rewrite all attributes which name starts from mtf to params
             angular.forEach(_.filter(_.keys(iAttrs.$attr), function (key) { return key.indexOf('mtf') === 0; }),

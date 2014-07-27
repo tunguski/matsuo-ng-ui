@@ -52,6 +52,9 @@ angular.module('test.module', ['mt.ui'])
     .config(function (restFactoryProvider) {
       restFactoryProvider.define('Test');
     })
+    .run(function (mtFormConfig) {
+      mtFormConfig.namesMap.entityShortcut = 'com.test.EntityShortcut';
+    })
     .config(function(userGroupConfigurationProvider) {
       userGroupConfigurationProvider.groupToDefaultRoute.push({ groupName: 'TEST', defaultRoute: '/base/test'});
       userGroupConfigurationProvider.groupToDefaultRoute.push({ groupName: '', defaultRoute: '/base/test2'});

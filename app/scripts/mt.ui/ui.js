@@ -176,11 +176,9 @@
       });
 
 
-  function dateFormatService () {
-    return function (format) {
-      return function (input) {
-        return input ? parseDate(input).format(format) : '';
-      };
+  function dateFormatService (format) {
+    return function (input) {
+      return input ? parseDate(input).format(format) : '';
     };
   }
 
