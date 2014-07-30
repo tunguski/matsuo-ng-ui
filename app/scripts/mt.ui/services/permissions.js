@@ -39,6 +39,8 @@ angular.module('mt.ui')
       $rootScope.$on('loggedIn', permissionService.reloadPermissions);
 
       return permissionService;
-    }
-);
+    })
+    // eager loading
+    .run(function (permissionService) {})
+;
 
