@@ -10,12 +10,14 @@ describe('Modified translation module', function () {
 
     it('should translate keys', function () {
       expect(_translate.instant('value.first')).toBe('one');
+      expect(_translate.instant('internal.value.first')).toBe('one');
       expect(_translate.instant('value.second')).toBe('two');
     });
 
 
     it('scope should translate keys', function () {
       expect(scope.translate('value.first')).toBe('one');
+      expect(scope.translate('internal.value.first')).toBe('one');
       expect(scope.translate('value.second')).toBe('two');
     });
   });

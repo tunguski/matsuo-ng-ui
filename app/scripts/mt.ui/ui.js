@@ -120,8 +120,8 @@
       .factory('mtTranslateHandlerFactory', function ($translate) {
         // has to return a function which gets a tranlation ID
         return function (translationID) {
-          if (translationID.lastIndexOf('.') > 0) {
-            var translation = $translate.instant(translationID.substr(translationID.lastIndexOf('.') + 1));
+          if (translationID.indexOf('.') > 0) {
+            var translation = $translate.instant(translationID.substr(translationID.indexOf('.') + 1));
             return _.endsWith(translationID, translation) ? translationID : translation;
           } else {
             return translationID;
