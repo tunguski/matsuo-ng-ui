@@ -62,8 +62,12 @@ angular.module('mt.ui')
           return function (fnType) {
             return function(entity) {
               var title = 'dialog.statusChange.confirm';
-              var msg = '<span><span translate="dialog.statusChange.successText"></span><b translate="{{ entityPartUrl + \'.changeStatus.\' + fnType }}"></b></span>';
-              var btns = [{result:'CANCEL', label: 'Cancel'}, {result:'OK', label: 'OK', cssClass: 'btn-primary'}];
+              var msg = '<span><span translate="dialog.statusChange.successText"></span>' +
+                  '<b translate="{{ entityPartUrl + \'.changeStatus.\' + fnType }}"></b></span>';
+              var btns = [
+                { result:'CANCEL', label: 'Cancel', cssClass: 'btn-default' },
+                { result:'OK',     label: 'OK',     cssClass: 'btn-primary' }
+              ];
 
               return dialogProvider.messageBox(title, msg, btns, function(result) {
                 if (result === 'OK') {
@@ -82,9 +86,10 @@ angular.module('mt.ui')
     }])
     .run(['$templateCache', function($templateCache) {
       $templateCache.put('template/messageBox/message.html',
-          '<div class="modal-header"><h3 translate="title"></h3></div>\n' +
-          '<div class="modal-body"><p ng-bind-html="message"></p></div>\n' +
-          '<div class="modal-footer"><button ng-repeat="btn in buttons" ng-click="close(btn.result)" class="btn" ng-class="btn.cssClass" translate="btn.label"></button></div>\n');
+          '<div class="modal-header"><h3 translate="{{title}}"></h3></div>\n' +
+          '<div class="modal-body"><p ng-bind-html="{{message}}"></p></div>\n' +
+          '<div class="modal-footer"><button ng-repeat="btn in buttons" ng-click="close(btn.result)" class="btn" ' +
+              'ng-class="btn.cssClass" translate="{{btn.label}}"></button></div>\n');
     }])
     .controller('MessageBoxCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
       $scope.close = function (result) { $modalInstance.close(result); };

@@ -105,7 +105,6 @@ describe('Dialog service -', function () {
     dialog.close('OK');
 
     http.flush();
-
   });
 });
 
