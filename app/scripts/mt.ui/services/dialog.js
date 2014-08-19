@@ -73,8 +73,12 @@ angular.module('mt.ui')
               return dialogProvider.messageBox(title, msg, btns, function(result) {
                 if (result === 'OK') {
                   $http.post('/api/' + entityPartUrl + '/' + entity.id + '/' + fnType).success(function(data) {
-                    entity[opts.statusField || 'status'] = data.replace(/['"]/g, '');
                     toastr.success(scope.translate('dialog.statusChange.successText'));
+                    if (opts.resultFn) {
+                      opts.resultFn(data.replace(/['"]/g, ''));
+                    } else {
+                      entity[opts.statusField || 'status'] = data.replace(/['"]/g, '');
+                    }
                   });
                 }
               });
