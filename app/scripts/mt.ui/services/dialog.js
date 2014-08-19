@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('mt.ui')
-    .factory('$dialog', ['$rootScope', '$modal', '$http', function($rootScope, $modal, $http) {
+    .factory('$dialog', ['$rootScope', '$modal', '$http', '$compile', function($rootScope, $modal, $http, $compile) {
 
       function modalOptions(templateUrl, controller, scope) {
         return { templateUrl:  templateUrl, controller: controller, scope: scope }; }
@@ -29,6 +29,7 @@ angular.module('mt.ui')
          */
         messageBox: function(title, message, buttons, resultFn) {
           var scope = angular.extend($rootScope.$new(false), { title: title, message: message, buttons: buttons });
+          //scope.message = $compile(message)(scope);
           return dialogProvider.dialog(modalOptions('template/messageBox/message.html', 'MessageBoxCtrl', scope),
               function (result) {
                 var value = resultFn ? resultFn(result) : undefined;
@@ -61,19 +62,19 @@ angular.module('mt.ui')
           opts = opts || {};
           return function (fnType) {
             return function(entity) {
-              var title = 'dialog.statusChange.confirm';
-              var msg = '<span><span translate="dialog.statusChange.successText"></span>' +
-                  '<b translate="{{ entityPartUrl + \'.changeStatus.\' + fnType }}"></b></span>';
+              var title = 'dialog.statusChange.confirmTitle';
+              var msg = $compile('<span><span translate="dialog.statusChange.confirmStatus"></span>' +
+                  '<b translate="' + entityPartUrl + '.changeStatus.' + fnType + '"></b></span>')(scope);
               var btns = [
-                { result:'CANCEL', label: 'Cancel', cssClass: 'btn-default' },
-                { result:'OK',     label: 'OK',     cssClass: 'btn-primary' }
+                { result:'CANCEL', label: 'cancel', cssClass: 'btn-default' },
+                { result:'OK',     label: 'confirm',     cssClass: 'btn-primary' }
               ];
 
               return dialogProvider.messageBox(title, msg, btns, function(result) {
                 if (result === 'OK') {
                   $http.post('/api/' + entityPartUrl + '/' + entity.id + '/' + fnType).success(function(data) {
                     entity[opts.statusField || 'status'] = data.replace(/['"]/g, '');
-                    toastr.success(scope.translate('dialogService.changeStatus.success'));
+                    toastr.success(scope.translate('dialog.statusChange.successText'));
                   });
                 }
               });
@@ -87,7 +88,7 @@ angular.module('mt.ui')
     .run(['$templateCache', function($templateCache) {
       $templateCache.put('template/messageBox/message.html',
           '<div class="modal-header"><h3 translate="{{title}}"></h3></div>\n' +
-          '<div class="modal-body"><p ng-bind-html="{{message}}"></p></div>\n' +
+          '<div class="modal-body"><p ng-bind-html="message"></p></div>\n' +
           '<div class="modal-footer"><button ng-repeat="btn in buttons" ng-click="close(btn.result)" class="btn" ' +
               'ng-class="btn.cssClass" translate="{{btn.label}}"></button></div>\n');
     }])
