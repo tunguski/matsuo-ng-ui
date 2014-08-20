@@ -5,19 +5,17 @@ angular.module('mt.ui')
       return {
         restrict: 'A',
         scope: {
-          ngOptions: '=',
+          opts: '=mtDatepicker',
           ngModel: '='
         },
         link: function(scope, element) {
+          scope.opts = scope.opts || {};
           scope.inputHasFocus = false;
-          element.datepicker(scope.ngOptions).on('changeDate', function(e) {
-            var defaultFormat, defaultLanguage, format, language;
-            defaultFormat = $.fn.datepicker.defaults.format;
-            format = scope.ngOptions.format || defaultFormat;
-            defaultLanguage = $.fn.datepicker.defaults.language;
-            language = scope.ngOptions.language || defaultLanguage;
+
+          element.datepicker(scope.opts).on('changeDate', function(e) {
+            var value = moment(e.date).format(scope.opts.momentFormat);
             return scope.$apply(function() {
-              return scope.ngModel = $.fn.datepicker.DPGlobal.formatDate(e.date, format, language);
+              return scope.ngModel = value;
             });
           });
           element.find('input').on('focus', function() {
