@@ -9,7 +9,7 @@ angular.module('mt.ui')
           query: '=query',
           searchFn: '&?search'
         },
-        template: '<form class="form-inline">' +
+        template: '<form class="form-inline simple-search-form">' +
                     '<div class="input-group">' +
                       '<input type="text" name="query" ng-model="query" class="form-control">' +
                       '<span ng-show="$parent.__loading" class="fa fa-spinner fa-spin form-control-feedback"></span>' +
