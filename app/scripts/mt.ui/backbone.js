@@ -143,20 +143,42 @@ function searchQueryFunction($scope, Resource, options) {
 
   $scope[listField] = [];
 
+  var searchPromise;
+
   $scope[refreshMethod] = function(n, o) {
     if (options.minLength && (!n || n.length < options.minLength)) {
       $scope[listField].length = 0;
       return;
     }
 
-    Resource.query({ query: $scope.query }, function(data) {
-      $scope[listField].length = 0;
-      $scope[listField].pushArray(data);
+    var $timeout = $scope.getService('$timeout');
 
-      if (options.afterLoadFn) {
-        options.afterLoadFn(data);
-      }
-    });
+    if (searchPromise) {
+      log('Cancelling query ' + n);
+      var cancelled = $timeout.cancel(searchPromise);
+      log('Did properly cancel: ' + cancelled);
+      searchPromise = null;
+    }
+
+    searchPromise = $timeout(function () {
+      log('Loading data with query ' + n);
+      $scope.__loading = true;
+      searchPromise = null;
+      Resource.query({ query: $scope.query }, function(data) {
+        try {
+          $scope[listField].length = 0;
+          $scope[listField].pushArray(data);
+
+          if (options.afterLoadFn) {
+            options.afterLoadFn(data);
+          }
+        } finally {
+          $scope.__loading = false;
+        }
+      }, function () {
+        $scope.__loading = false;
+      });
+    }, 500);
   };
   $scope[refreshMethod]();
 

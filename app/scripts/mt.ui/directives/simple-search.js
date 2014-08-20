@@ -12,6 +12,7 @@ angular.module('mt.ui')
         template: '<form class="form-inline">' +
                     '<div class="input-group">' +
                       '<input type="text" name="query" ng-model="query" class="form-control">' +
+                      '<span ng-show="$parent.__loading" class="fa fa-spinner fa-spin form-control-feedback"></span>' +
                       '<div class="input-group-btn">' +
                         '<button type="button" ng-click="clearQuery()" class="btn btn-default"><i class="fa fa-times"></i></button>' +
                         '<button type="button" ng-if="showSearchButton" ng-click="searchFn({query: query})" class="btn btn-default" translate="form.search"></button>' +
