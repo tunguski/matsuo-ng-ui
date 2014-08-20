@@ -61,9 +61,9 @@
         };
 
         // default date configuration
-        $rootScope.dateOptions = {
-          appendToBody: true//,
-          //dateFormat: 'yy-mm-dd'
+        $rootScope.datepickerOptions = {
+          format: 'dd-mm-yyyy',
+          momentFormat: 'DD-MM-yyyy'
         };
 
         /**

@@ -8,14 +8,22 @@ angular.module('mt.ui')
           opts: '=mtDatepicker',
           ngModel: '='
         },
-        link: function(scope, element) {
+        require: 'ngModel',
+        link: function(scope, element, attrs, ngModelCtrl) {
           scope.opts = scope.opts || {};
           scope.inputHasFocus = false;
 
+          ngModelCtrl.$formatters.push(function(modelValue) {
+            return moment.isMoment(modelValue) ? modelValue.format('DD-MM-yyyy') : modelValue;
+          });
+          ngModelCtrl.$parsers.push(function(viewValue) {
+            var result = moment(viewValue, 'DD-MM-YYYY');
+            return result.isValid() ? result : undefined;
+          });
+
           element.datepicker(scope.opts).on('changeDate', function(e) {
-            var value = moment(e.date).format(scope.opts.momentFormat);
             return scope.$apply(function() {
-              return scope.ngModel = value;
+              return scope.ngModel = moment(e.date);
             });
           });
           element.find('input').on('focus', function() {
@@ -25,7 +33,7 @@ angular.module('mt.ui')
           });
           return scope.$watch('ngModel', function(newValue) {
             if (!scope.inputHasFocus) {
-              return element.datepicker('update', newValue);
+              return element.datepicker('update', ngModelCtrl.$viewValue);
             }
           });
         }
