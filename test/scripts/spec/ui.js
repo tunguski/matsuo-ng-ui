@@ -59,7 +59,7 @@ describe('UI -', function () {
         houseNumber: '17',
         apartmentNumber: '20'
       };
-      expect($filter('addressPresenter')(address)).toBe('22-333 Warszawa<br/>Starzyńskiego 17 / 20');
+      expect($filter('addressPresenter')(address)).toBe('22-333 Warszawa<br/>Starzyńskiego 17/20');
 
       address.apartmentNumber = undefined;
       expect($filter('addressPresenter')(address)).toBe('22-333 Warszawa<br/>Starzyńskiego 17');

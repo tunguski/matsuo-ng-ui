@@ -100,9 +100,9 @@ describe('Backbone', function () {
       searchQueryFunction(scope, Test);
       scope.query = 'fafa';
 
+      scope.$digest();
       http.expectGET('/api/tests').respond([{}, {}]);
       http.expectGET('/api/tests?query=fafa').respond([{}, {}]);
-      scope.$digest();
       http.flush();
 
       expect(scope.elements.length).toBe(2);

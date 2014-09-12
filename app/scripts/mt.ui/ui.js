@@ -27,21 +27,13 @@
           if (!address) {
             return;
           }
-          var result = '';
-
-          if (address.zipCode) {
-            result = result + address.zipCode + ' ';
-          }
-          result = result + address.town + '<br/>';
-          result = result + address.street;
-          if (address.houseNumber) {
-            result = result + ' ' + address.houseNumber;
-          }
-          if (address.apartmentNumber) {
-            result = result + ' / ' + address.apartmentNumber;
-          }
-
-          return result;
+          return '' +
+              (address.zipCode ? address.zipCode + ' ' : '') +
+              (address.town ? address.town : '') +
+              (address.zipCode || address.town ? '<br/>' : '') +
+              (address.street ? address.street + ' ' : '') +
+              (address.houseNumber ? address.houseNumber : '') +
+              (address.apartmentNumber ? '/' + address.apartmentNumber : '');
         };
       })
 
