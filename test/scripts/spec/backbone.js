@@ -1,9 +1,10 @@
 describe('Backbone', function () {
 
 
-  var Test, q;
-  beforeEach(inject(function (_Test_, $q) {
+  var Test, q, $timeout;
+  beforeEach(inject(function (_Test_, _$timeout_, $q) {
     Test = _Test_;
+    $timeout = _$timeout_;
     q = $q;
   }));
 
@@ -100,9 +101,9 @@ describe('Backbone', function () {
       searchQueryFunction(scope, Test);
       scope.query = 'fafa';
 
-      scope.$digest();
-      http.expectGET('/api/tests').respond([{}, {}]);
       http.expectGET('/api/tests?query=fafa').respond([{}, {}]);
+      scope.$digest();
+      $timeout.flush();
       http.flush();
 
       expect(scope.elements.length).toBe(2);
@@ -120,6 +121,7 @@ describe('Backbone', function () {
 
       http.expectGET('/api/tests?query=fafa').respond([{}, {}]);
       scope.$digest();
+      $timeout.flush();
       http.flush();
 
       expect(afterLoadExecuted).toBe(true);
