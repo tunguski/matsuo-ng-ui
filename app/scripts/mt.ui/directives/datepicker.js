@@ -14,7 +14,8 @@ angular.module('mt.ui')
           scope.inputHasFocus = false;
 
           ngModelCtrl.$formatters.push(function(modelValue) {
-            return moment.isMoment(modelValue) ? modelValue.format('DD-MM-yyyy') : modelValue;
+            return moment.isMoment(modelValue) ? modelValue.format('DD-MM-YYYY') :
+                moment(modelValue).isValid() ? moment(modelValue).format('DD-MM-YYYY') : modelValue;
           });
           ngModelCtrl.$parsers.push(function(viewValue) {
             var result = moment(viewValue, 'DD-MM-YYYY');
