@@ -307,6 +307,10 @@ function initializeSelect2($scope, path, url, formatPrefix, optionsExtensions) {
     url = false;
   }
 
+  if (optionsExtensions.tags) {
+    optionsExtensions.minimumInputLength = 0;
+  }
+
 
   obj.options = $.extend(true, {
     minimumInputLength : 3,
