@@ -10,14 +10,22 @@ angular.module('mt.ui')
         },
         require: 'ngModel',
         link: function(scope, element, attrs, ngModelCtrl) {
-          scope.opts = scope.opts || {};
+          scope.opts = scope.opts || {
+            format: 'dd-mm-yyyy'
+          };
           scope.inputHasFocus = false;
 
           ngModelCtrl.$formatters.push(function(modelValue) {
+            if (!modelValue) {
+              return;
+            }
             return moment.isMoment(modelValue) ? modelValue.format('DD-MM-YYYY') :
                 moment(modelValue).isValid() ? moment(modelValue).format('DD-MM-YYYY') : modelValue;
           });
           ngModelCtrl.$parsers.push(function(viewValue) {
+            if (!viewValue) {
+              return;
+            }
             var result = moment(viewValue, 'DD-MM-YYYY');
             return result.isValid() ? result : undefined;
           });
