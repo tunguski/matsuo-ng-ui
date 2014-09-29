@@ -55,7 +55,7 @@
         // default date configuration
         $rootScope.datepickerOptions = {
           format: 'dd-mm-yyyy',
-          momentFormat: 'DD-MM-yyyy'
+          momentFormat: 'DD-MM-YYYY'
         };
 
         /**
