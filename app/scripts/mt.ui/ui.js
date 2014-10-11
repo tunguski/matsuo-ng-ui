@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var mt_ui = angular.module('mt.ui', ['ui.bootstrap', 'ui.select2', 'mt.route', 'mt.resource', 'pascalprecht.translate'])
+  var mt_ui = angular.module('mt.ui', ['ui.bootstrap', 'ui.select', 'mt.route', 'mt.resource', 'pascalprecht.translate'])
       .config(function($routeProvider, $httpProvider, $sceProvider) {
         // Completely disable SCE.  For demonstration purposes only!
         // Do not use in new projects.
@@ -137,7 +137,7 @@
 
         self.groupToDefaultRoute = [];
 
-        this.$get = function ($rootScope, $route) {
+        this.$get = function ($rootScope, $route, $location) {
           return {
             // placeholder for refreshing user group configuration
             refreshAppUserConfiguration: function () {
@@ -150,6 +150,9 @@
 
               mtRouteConfig.defaultRoute = element ? element.defaultRoute : '';
               $route.routes['null'] = mtRouteConfig.defaultRoute;
+              if ($location.path() === '') {
+                $location.path(mtRouteConfig.defaultRoute);
+              }
             }
           };
         };

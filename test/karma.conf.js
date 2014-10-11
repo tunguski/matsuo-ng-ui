@@ -19,14 +19,13 @@ module.exports = function(config) {
       'bower_components/underscore/underscore.js',
       'bower_components/moment/moment.js',
       'bower_components/moment/lang/pl.js',
-      'bower_components/select2/select2.js',
 
       'bower_components/angular/angular.js',
       'bower_components/angular-sanitize/angular-sanitize.js',
       'bower_components/angular-resource/angular-resource.js',
       'bower_components/angular-route/angular-route.js',
       'bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
-      'bower_components/angular-ui-select2/src/select2.js',
+      'bower_components/angular-ui-select/dist/select.js',
       //'bower_components/angular-translate/angular-translate.js',
       'app/scripts/external/angular-translate-fix.js',
 

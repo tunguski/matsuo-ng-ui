@@ -157,6 +157,7 @@ describe('UI -', function () {
         http.expectGET('/api/login/user').respond({});
 
         http.expectPOST('/api/login/permissions').respond([]);
+        http.expectGET('/testViews/base/test2.html').respond("");
         http.expectPOST('/api/login/permissions').respond([]);
 
         scope.login();
