@@ -2,7 +2,6 @@
 
 /**
  * Displaying validation errors in forms.
- * Wyświetlanie błędów walidacji na ekranach.
  */
 angular.module('mt.ui')
     .factory('validationService', function($dialog) {
@@ -14,7 +13,7 @@ angular.module('mt.ui')
       function clearValidationErrors($scope, formName) {
         var form = $scope[formName];
         for (var fieldName in form) {
-          if (typeof form[fieldName].serverError === 'string') {
+          if (fieldName.indexOf('$') != 0 && typeof form[fieldName].serverError === 'string') {
             delete form[fieldName].serverError;
           }
         }

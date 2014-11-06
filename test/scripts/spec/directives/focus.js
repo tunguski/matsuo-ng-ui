@@ -4,7 +4,7 @@ describe('Focus', function () {
     $timeout = _$timeout_;
   }));
 
-  it('works', function () {
+  xit('works', function () {
     scope.focusLostInvoked = false;
     scope.focusModel = false;
     scope.focusLost = function () {
@@ -29,24 +29,6 @@ describe('Focus', function () {
     expect(input.is(':focus')).toBe(false);
 
     expect(scope.focusLostInvoked).toBe(true);
-  });
-
-  it('focus select2', function () {
-    scope.focusModel = false;
-
-    var template = compile("<div><select mt-focus-model=\"focusModel\"></select></div>")(scope);
-    scope.$digest();
-    var input = template.find('input');
-    input.select2();
-
-    expect(input.is(':focus')).toBe(false);
-
-    scope.focusModel = true;
-    scope.$digest();
-    $timeout.flush();
-
-    // fixme!
-    //expect(input.is(':focus')).toBe(true);
   });
 });
 

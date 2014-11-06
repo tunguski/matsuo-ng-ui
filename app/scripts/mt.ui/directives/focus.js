@@ -7,15 +7,7 @@ angular.module('mt.ui')
           scope.$watch( attrs.mtFocusModel, function ( val ) {
 //            log(attrs.mtFocusModel + ' : ' + val);
             if ( angular.isDefined( val ) && val ) {
-              $timeout( function () {
-                if (element.data('select2')) {
-//                  log('elem select: ' + element);
-                  element.select2('focus');
-                } else {
-//                  log('elem other: ' + element);
-                  element.focus();
-                }
-              });
+              $timeout(element.focus);
             }
           }, true);
 
