@@ -60,6 +60,7 @@ angular.module('mt.ui')
               $http.get(opts.url + '?' + _.toUrlParams({ query : searchText }))
                   .success(function (data) {
                     scope.elements = data;
+                    $select.elements = data;
                   });
             }
           };
