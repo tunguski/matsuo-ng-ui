@@ -2,6 +2,28 @@
 
 (function () {
   var mt_ui = angular.module('mt.ui', ['ui.bootstrap', 'ui.select', 'mt.route', 'mt.resource', 'pascalprecht.translate'])
+
+      // moment filters
+      .config(function($filterProvider) {
+        moment.lang('pl');
+
+        $filterProvider.register('fromNow', function() {
+          return function (date) {
+            return moment(date).fromNow();
+          };
+        });
+
+        $filterProvider.register('moment', function() {
+          return function (date, style) {
+            if (style === 'date') {
+              return moment(date).format('d MMMM YYYY');
+            } else {
+              return moment(date).format('d MMMM YYYY HH:mm:ss');
+            }
+          };
+        });
+      })
+
       .config(function($routeProvider, $httpProvider, $sceProvider) {
         // Completely disable SCE.  For demonstration purposes only!
         // Do not use in new projects.
