@@ -29,7 +29,7 @@ angular.module('mt.ui')
 
             $rootScope.$broadcast('loggedIn');
             $route.reload();
-            $location.url('');
+            //$location.url('');
           });
         };
 
