@@ -21,7 +21,7 @@ angular.module('mt.ui')
 
 
         $scope.afterLogged = function (data) {
-          Login.getUser(scopeSetter($rootScope, 'user')).$promise.then(function (user) {
+          Login.getUser($rootScope.scopeSetter('user')).$promise.then(function (user) {
             $scope.loginData = {};
             $scope.errorClass = '';
             $rootScope.loggedIn = !!data;

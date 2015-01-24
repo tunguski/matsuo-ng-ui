@@ -3,6 +3,17 @@
 (function () {
   var mt_ui = angular.module('mt.ui', ['ui.bootstrap', 'ui.select', 'mt.route', 'mt.resource', 'pascalprecht.translate'])
 
+
+      .run(function ($rootScope) {
+        $rootScope.scopeSetter = function (field) {
+          var self = this;
+          return function (value) {
+            self[field] = value;
+          };
+        };
+      })
+
+
       // moment filters
       .config(function($filterProvider) {
         moment.lang('pl');
@@ -67,7 +78,7 @@
             // assignment does not work if it changes another compiled part
             $rootScope.title = '';
             $timeout(function() {
-              $rootScope.title = $compile(title)(scope).get();
+              $rootScope.title = $compile(title)(scope);
             });
           } else {
             $rootScope.title = title;

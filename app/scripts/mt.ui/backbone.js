@@ -101,11 +101,6 @@ function isBetween(date, from, to) {
 }
 
 
-function scopeSetter(scope, propertyName) {
-  return function (data) { _.setByPath(scope, propertyName, data); };
-}
-
-
 function saveOrUpdate($scope, field, saveFn, updateFn, requestParamsFn) {
   var validationFn = $scope.getService('validationService')($scope);
 
