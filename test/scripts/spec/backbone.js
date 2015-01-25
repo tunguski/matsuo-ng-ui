@@ -62,7 +62,7 @@ describe('Backbone', function () {
 
 
   it('scopeSetter', function () {
-    scopeSetter(scope, 'field')('xxx');
+    scope.scopeSetter('field')('xxx');
     expect(scope.field).toBe('xxx');
   });
 
