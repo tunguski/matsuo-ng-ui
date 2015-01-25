@@ -35,7 +35,7 @@ angular.module('mt.ui')
       return {
         require: '^mtFormPart',
         replace: true,
-        template: '<div ng-bind-html="fieldBody"></div>',
+        template: '<div bind-dynamic="fieldBody"></div>',
         scope: true,
         link: function (scope, iElement, iAttrs, ctrl) {
           function fieldUrl() {
@@ -67,7 +67,7 @@ angular.module('mt.ui')
             }
             html = html.replace(/\\"/g, '"').replace(/\\n/g, '');
             //iElement.html(html);
-            scope.fieldBody = $compile(html)(scope).get();
+            scope.fieldBody = $compile(html)(scope);
           });
         }
       };

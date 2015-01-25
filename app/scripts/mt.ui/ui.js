@@ -79,7 +79,7 @@
             $rootScope.title = '';
             $timeout(function() {
               $rootScope.title = $compile(title)(scope);
-            });
+            }, 100);
           } else {
             $rootScope.title = title;
           }
