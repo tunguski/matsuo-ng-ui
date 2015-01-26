@@ -5,10 +5,14 @@ angular.module('mt.ui')
       // polish translation
       $translateProvider.translations('pl', {
 
-        dialogService: {
+        dialog: {
           changeStatus: {
-            success: 'Zmieniono status'
+            successText: 'Zmieniono status'
           }
+        },
+
+        login: {
+          success: 'Zalogowano do systemu'
         },
 
         form: {

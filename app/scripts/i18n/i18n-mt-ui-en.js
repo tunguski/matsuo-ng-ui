@@ -2,13 +2,17 @@
 
 angular.module('mt.ui')
     .config(function($translateProvider) {
-      // polish translation
+      // english translation
       $translateProvider.translations('en', {
 
-        dialogService: {
+        dialog: {
           changeStatus: {
-            success: 'Status changed'
+            successText: 'Status changed'
           }
+        },
+
+        login: {
+          success: 'Logged in'
         },
 
         form: {
