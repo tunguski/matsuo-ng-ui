@@ -37,7 +37,19 @@ angular.module('mt.ui')
           search: 'Wyszukaj'
         },
 
-        cancel: 'Anuluj'
+        validation: {
+          error: {
+            NotNull: 'Pole nie może być puste',
+            NotEmpty: 'Pole nie może być puste',
+            PESEL: 'Nieprawidłowy pesel',
+            no_cash_register_set: 'Nie wybrano kasy',
+            PWZ: 'Nieprawidłowy numer PWZ'
+          }
+        },
+
+        cancel: 'Anuluj',
+        save: 'Zapisz',
+        create: 'Utwórz'
 
       });
     });

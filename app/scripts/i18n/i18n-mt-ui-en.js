@@ -37,7 +37,19 @@ angular.module('mt.ui')
           search: 'Search'
         },
 
-        cancel: 'Cancel'
+        validation: {
+          error: {
+            NotNull: 'Field cannot be empty',
+            NotEmpty: 'Field cannot be empty',
+            PESEL: 'Incorrect ID number',
+            no_cash_register_set: 'No cash register set',
+            PWZ: 'Incorrect PWZ number'
+          }
+        },
+
+        cancel: 'Cancel',
+        save: 'Save',
+        create: 'Create'
 
       });
     });
