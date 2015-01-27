@@ -8,10 +8,20 @@ angular.module('mt.ui')
         dialog: {
           changeStatus: {
             successText: 'Status changed'
+          },
+          remindPassword: {
+            title: 'Forgotten password',
+            provideUserNameText: 'Provide username for which activation link should be sent',
+            sendLink: 'Send reminder',
+            success: 'Email with activation link was sent. Please click on link to change the password.'
+          },
+          createAccount: {
+            success: 'Email with activation link was sent. Please click on link for next step.'
           }
         },
 
         login: {
+          login: 'Login',
           success: 'Logged in'
         },
 
@@ -25,6 +35,9 @@ angular.module('mt.ui')
             email: 'Send email'
           },
           search: 'Search'
-        }
+        },
+
+        cancel: 'Cancel'
+
       });
     });

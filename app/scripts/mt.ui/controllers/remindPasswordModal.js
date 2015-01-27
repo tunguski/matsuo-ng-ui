@@ -15,7 +15,7 @@ angular.module('mt.ui')
         if ($scope.remind.username) {
           $http.post('/api/login/remindPassword/' + $scope.remind.username)
               .success(function () {
-                toastr.success('Przesłano email z linkiem zmiany hasła');
+                toastr.success($scope.translate('dialog.remindPassword.success'));
                 $modalInstance.close();
               });
         } else {

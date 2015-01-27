@@ -8,10 +8,20 @@ angular.module('mt.ui')
         dialog: {
           changeStatus: {
             successText: 'Zmieniono status'
+          },
+          remindPassword: {
+            title: 'Zapomniałem hasła',
+            provideUserNameText: 'Podaj nazwę użytkownika któremu zostanie przesłany link aktywacyjny',
+            sendLink: 'Wyślij przypomnienie',
+            success: 'Przesłano email z linkiem. Proszę kliknąć w link aby zmienić hasło.'
+          },
+          createAccount: {
+            success: 'Przesłano email z linkiem. Proszę kliknąć w link aby potwierdzić zgodność adresu email.'
           }
         },
 
         login: {
+          login: 'Login',
           success: 'Zalogowano do systemu'
         },
 
@@ -25,6 +35,9 @@ angular.module('mt.ui')
             email: 'Wyślij mailem'
           },
           search: 'Wyszukaj'
-        }
+        },
+
+        cancel: 'Anuluj'
+
       });
     });

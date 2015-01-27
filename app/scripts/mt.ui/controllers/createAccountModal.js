@@ -15,7 +15,7 @@ angular.module('mt.ui')
         if (isValid) {
           $http.post('/api/login/createAccount', $scope.loginData)
               .success(function (data) {
-                toastr.success('Przesłano email z linkiem. Proszę kliknąć aby potwierdzić zgodność adresu email\n' + data);
+                toastr.success($scope.translate('dialog.createAccount.success') + '\n' + data);
                 $modalInstance.close();
               });
         } else {
