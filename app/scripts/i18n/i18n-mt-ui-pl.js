@@ -47,6 +47,10 @@ angular.module('mt.ui')
           }
         },
 
+        select: {
+          placeholderText: 'Wybierz element ...'
+        },
+
         cancel: 'Anuluj',
         save: 'Zapisz',
         create: 'Utwórz'
