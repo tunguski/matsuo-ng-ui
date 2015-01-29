@@ -26,7 +26,7 @@ module.exports = function(config) {
       'bower_components/angular-route/angular-route.js',
       'bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
       'bower_components/angular-ui-select/dist/select.js',
-      //'bower_components/angular-translate/angular-translate.js',
+      'bower_components/angular-translate/angular-translate.js',
       'app/scripts/external/angular-translate-fix.js',
 
       'bower_components/matsuo-js-util/matsuo-js-util.js',
