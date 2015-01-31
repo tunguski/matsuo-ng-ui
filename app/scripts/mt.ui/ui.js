@@ -16,7 +16,7 @@
 
       // moment filters
       .config(function($filterProvider) {
-        moment.lang('pl');
+        moment.locale('pl');
 
         $filterProvider.register('fromNow', function() {
           return function (date) {
