@@ -1,10 +1,38 @@
 describe('UI -', function () {
 
+
   describe('filters -', function () {
     var $filter;
     beforeEach(inject(function (_$filter_) {
       $filter = _$filter_;
     }));
+
+
+    it('fromNow', function () {
+      var date = moment().add(-1, 'day');
+      date.locale('pl');
+      expect($filter('fromNow')(date)).toBe('1 dzień temu');
+      date.locale('en');
+      expect($filter('fromNow')(date)).toBe('a day ago');
+    });
+
+
+    it('moment', function () {
+      var date = moment('2013-02-08 09:30:26');
+      date.locale('pl');
+      expect($filter('moment')(date)).toBe('5 luty 2013 09:30:26');
+      date.locale('en');
+      expect($filter('moment')(date)).toBe('5 February 2013 09:30:26');
+    });
+
+
+    it('moment with date format', function () {
+      var date = moment('2013-02-08 09:30:26');
+      date.locale('pl');
+      expect($filter('moment')(date, 'date')).toBe('5 luty 2013');
+      date.locale('en');
+      expect($filter('moment')(date, 'date')).toBe('5 February 2013');
+    });
 
 
     it('weekdayLabel', function () {
@@ -15,6 +43,7 @@ describe('UI -', function () {
       expect($filter('weekdayLabel')(date)).toBe('Monday');
     });
 
+
     it('formatDate', function () {
       var date = moment('2013-02-08 09:30:26');
       date.locale('pl');
@@ -22,6 +51,7 @@ describe('UI -', function () {
       date.locale('en');
       expect($filter('formatDate')(date)).toBe('2013-02-08');
     });
+
 
     it('formatTime', function () {
       var date = moment('2013-02-08 09:30:26');
@@ -31,6 +61,7 @@ describe('UI -', function () {
       expect($filter('formatTime')(date)).toBe('09:30');
     });
 
+
     it('formatDateTime', function () {
       var date = moment('2013-02-08 09:30:26');
       date.locale('pl');
@@ -39,17 +70,20 @@ describe('UI -', function () {
       expect($filter('formatDateTime')(date)).toBe('2013-02-08 09:30');
     });
 
+
     it('formatDayMoment pl', function () {
       var date = moment('2013-02-08 09:30:26');
       date.locale('pl');
       expect($filter('formatDayMoment')(date)).toBe('pt 09:30');
     });
 
+
     it('formatDayMoment en', function () {
       var date = moment('2013-02-08 09:30:26');
       date.locale('en');
       expect($filter('formatDayMoment')(date)).toBe('Fri 09:30');
     });
+
 
     it('formats address correctly', function () {
       var address = {
@@ -71,16 +105,19 @@ describe('UI -', function () {
     });
   });
 
+
   describe('setTitle', function () {
     var $timeout;
     beforeEach(inject(function (_$timeout_) {
       $timeout = _$timeout_;
     }));
 
+
     it('sets static title', function () {
       rootScope.setTitle('test');
       expect(rootScope.title).toBe('test');
     });
+
 
     it('sets dynamic title', function () {
       scope.name = 'Kryspin';
@@ -92,18 +129,26 @@ describe('UI -', function () {
     });
   });
 
-  it('printing file works', function () {
-    rootScope.printFile('/api/prints/4324343');
 
-    expect($('iframe').length).toBe(1);
+  describe('printing', function () {
+    it('printing file works', function () {
+
+      rootScope.printFile('/api/prints/4324343');
+
+      expect($('iframe').length).toBe(1);
+    });
   });
 
+
   describe('services', function () {
+
+
     describe('baseAppCtrl', function () {
       var baseAppCtrl;
       beforeEach(inject(function (_baseAppCtrl_) {
         baseAppCtrl = _baseAppCtrl_;
       }));
+
 
       it('works', function () {
         baseAppCtrl(scope);
@@ -118,6 +163,7 @@ describe('UI -', function () {
       });
     });
 
+
     describe('userGroupConfiguration', function () {
       var userGroupConfiguration, $route;
       beforeEach(inject(function (_userGroupConfiguration_, _$route_) {
@@ -125,11 +171,13 @@ describe('UI -', function () {
         $route = _$route_;
       }));
 
+
       it('group route works', function () {
         rootScope.user = { groups: [ { name: 'TEST' } ] };
         userGroupConfiguration.refreshAppUserConfiguration();
         expect($route.routes['null']).toBe('/base/test');
       });
+
 
       it('default route works', function () {
         rootScope.user = { groups: [ { name: 'XLL' } ] };
@@ -139,11 +187,13 @@ describe('UI -', function () {
     });
   });
 
+
   describe('controllers', function () {
     describe('AppCtrl', function () {
       beforeEach(inject(function ($controller) {
         controller = $controller('AppCtrl', {$scope: scope});
       }));
+
 
       it ('login works', function () {
         scope.loginData = {
@@ -164,6 +214,7 @@ describe('UI -', function () {
         http.flush();
       });
 
+
       it('isLoggedIn', function () {
         rootScope.loggedIn = true;
         expect(scope.isLoggedIn()).toBe(true);
@@ -173,6 +224,7 @@ describe('UI -', function () {
         expect(scope.isLoggedIn()).toBe(false);
       });
 
+
       it('isLoggedOff', function () {
         rootScope.loggedIn = true;
         expect(scope.isLoggedOff()).toBe(false);
@@ -181,6 +233,7 @@ describe('UI -', function () {
         rootScope.loggedIn = undefined;
         expect(scope.isLoggedOff()).toBe(false);
       });
+
 
       it('logoff', function () {
         rootScope.loggedIn = true;
@@ -194,6 +247,7 @@ describe('UI -', function () {
       });
     });
 
+
     describe('RemindPasswordModalCtrl', function () {
       var $modalInstance;
       beforeEach(inject(function ($controller) {
@@ -203,6 +257,7 @@ describe('UI -', function () {
         controller = $controller('RemindPasswordModalCtrl', {$scope: scope, $modalInstance: $modalInstance});
       }));
 
+
       it('remindPassword', function () {
         scope.remind.username = 'testowy';
         http.expectPOST('/api/login/remindPassword/testowy').respond('');
@@ -211,12 +266,14 @@ describe('UI -', function () {
       });
     });
 
+
     describe('HeaderCtrl', function () {
       var $location;
       beforeEach(inject(function ($controller, _$location_) {
         controller = $controller('HeaderCtrl', {$scope: scope});
         $location = _$location_;
       }));
+
 
       it('showHelp', function () {
         $location.path('/base/info');
@@ -226,6 +283,7 @@ describe('UI -', function () {
       });
     });
   });
+
 
   it('hasService', function () {
     expect(rootScope.hasService('$filter')).toBe(true);

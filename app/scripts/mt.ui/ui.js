@@ -101,14 +101,17 @@
          */
         $rootScope.printFile = function (urlOfFile) {
           var path = $location.protocol() + '://' + $location.host() + ':' + $location.port() + urlOfFile;
-          // print
+
+          // create DOM element
           var iframe = document.createElement('iframe');
           iframe.src = path;
           iframe.style.display = 'none';
-          var iFrameLoaded = function() {
+
+          function iFrameLoaded() {
             iframe.contentWindow.print();
             iframe.parentNode.removeChild(iframe);
-          };
+          }
+
           if (iframe.attachEvent) {
             iframe.attachEvent('onload', iFrameLoaded); // for IE
           } else if (iframe.addEventListener) {

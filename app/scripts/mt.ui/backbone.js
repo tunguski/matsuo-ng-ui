@@ -43,7 +43,7 @@ function extractEventEndDate(element) {
   if (element.endDate) {
     return moment(element.endDate).toDate();
   } else {
-    return moment(element.startDate).add('minutes', parseInt(element.duration)).toDate();
+    return moment(element.startDate).add(parseInt(element.duration), 'minutes').toDate();
   }
 }
 
