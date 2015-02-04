@@ -8,7 +8,7 @@
         $rootScope.scopeSetter = function (field) {
           var self = this;
           return function (value) {
-            self[field] = value;
+            _.setByPath(self, field, value);
           };
         };
       })

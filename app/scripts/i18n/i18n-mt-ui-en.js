@@ -52,6 +52,7 @@ angular.module('mt.ui')
         },
 
         cancel: 'Cancel',
+        back: 'Back',
         save: 'Save',
         create: 'Create'
 
