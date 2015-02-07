@@ -5,11 +5,21 @@
 
 
       .run(function ($rootScope) {
+        // return function that sets param value to field on scope
         $rootScope.scopeSetter = function (field) {
           var self = this;
           return function (value) {
             _.setByPath(self, field, value);
           };
+        };
+
+        // watch field and execute only when new not false value was passed
+        $rootScope.$watchNotFalse = function (field, fn) {
+          this.$watch(field, function (n, o) {
+            if (n) {
+              fn(n, o);
+            }
+          });
         };
       })
 
