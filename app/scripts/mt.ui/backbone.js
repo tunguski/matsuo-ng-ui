@@ -88,6 +88,16 @@ function err(msg) {
 }
 
 
+function assert(condition, message) {
+  if (!condition) {
+    message = message || 'Assertion failed';
+    if (typeof Error !== 'undefined') {
+      throw new Error(message);
+    }
+    throw message; // Fallback
+  }
+}
+
 $(document).ready(function() {
   $.ajaxSetup({ error: function (jqXHR, textStatus, errorThrown) {
     log('xhr error: ' + textStatus + '; ' + errorThrown);
