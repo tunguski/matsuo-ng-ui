@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('mt.ui')
-    .factory('$dialog', ['$rootScope', '$modal', '$http', '$compile', function($rootScope, $modal, $http, $compile) {
+    .factory('$dialog', ['$rootScope', '$uibModal', '$http', '$compile', function($rootScope, $uibModal, $http, $compile) {
 
       function modalOptions(templateUrl, controller, scope) {
         return { templateUrl:  templateUrl, controller: controller, scope: scope }; }
@@ -11,7 +11,7 @@ angular.module('mt.ui')
          * Creates and opens dialog.
          */
         dialog: function (modalOptions, resultFn) {
-          var dialogInstance = $modal.open(modalOptions);
+          var dialogInstance = $uibModal.open(modalOptions);
           if (resultFn) { dialogInstance.result.then(resultFn); }
           dialogInstance.values = modalOptions;
           return dialogInstance;
@@ -96,7 +96,7 @@ angular.module('mt.ui')
           '<div class="modal-footer"><button ng-repeat="btn in buttons" ng-click="close(btn.result)" class="btn" ' +
               'ng-class="btn.cssClass" translate="{{btn.label}}"></button></div>\n');
     }])
-    .controller('MessageBoxCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
-      $scope.close = function (result) { $modalInstance.close(result); };
+    .controller('MessageBoxCtrl', ['$scope', '$uibModalInstance', function ($scope, $uibModalInstance) {
+      $scope.close = function (result) { $uibModalInstance.close(result); };
     }]);
 

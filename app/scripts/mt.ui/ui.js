@@ -212,8 +212,8 @@
        * # HelpModalCtrl
        * Controller of the mt.ui
        */
-      .controller('HelpModalCtrl', function ($scope, $modalInstance) {
-        $scope.close = function(result) { $modalInstance.close(result); };
+      .controller('HelpModalCtrl', function ($scope, $uibModalInstance) {
+        $scope.close = function(result) { $uibModalInstance.close(result); };
       });
 
 

@@ -8,7 +8,7 @@ angular.module('mt.ui')
      * # CreateAccountModalCtrl
      * Controller of the mt.ui
      */
-    .controller('CreateAccountModalCtrl', function ($scope, $http, $modalInstance) {
+    .controller('CreateAccountModalCtrl', function ($scope, $http, $uibModalInstance) {
       $scope.loginData = {};
 
       $scope.createAccount = function(isValid) {
@@ -16,7 +16,7 @@ angular.module('mt.ui')
           $http.post('/api/login/createAccount', $scope.loginData)
               .success(function (data) {
                 toastr.success($scope.translate('dialog.createAccount.success') + '\n' + data);
-                $modalInstance.close();
+                $uibModalInstance.close();
               });
         } else {
           $scope.errorClass = 'text-red';
@@ -24,7 +24,7 @@ angular.module('mt.ui')
       };
 
       $scope.close = function() {
-        $modalInstance.close();
+        $uibModalInstance.close();
       };
     })
 ;
