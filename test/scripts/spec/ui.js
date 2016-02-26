@@ -249,12 +249,12 @@ describe('UI -', function () {
 
 
     describe('RemindPasswordModalCtrl', function () {
-      var $modalInstance;
+      var $uibModalInstance;
       beforeEach(inject(function ($controller) {
-        $modalInstance = {
+        $uibModalInstance = {
           close: function () {}
         };
-        controller = $controller('RemindPasswordModalCtrl', {$scope: scope, $modalInstance: $modalInstance});
+        controller = $controller('RemindPasswordModalCtrl', {$scope: scope, $uibModalInstance: $uibModalInstance});
       }));
 
 
